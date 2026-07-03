@@ -1,5 +1,7 @@
 package com.easysort.platform.fabric;
 
+import com.easysort.platform.fabric.network.SortContainerPayload;
+import com.easysort.platform.fabric.server.SortContainerServerHandler;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,5 +13,7 @@ public final class EasySort implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Easy Sort initializing");
+		SortContainerPayload.register();
+		SortContainerServerHandler.register();
 	}
 }

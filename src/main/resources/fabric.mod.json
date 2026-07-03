@@ -12,6 +12,9 @@
 	},
 	"license": "MIT",
 	"environment": "*",
+	"mixins": [
+		"easy-sort.mixins.json"
+	],
 	"entrypoints": {
 		"main": [
 			"com.easysort.platform.fabric.EasySort"
