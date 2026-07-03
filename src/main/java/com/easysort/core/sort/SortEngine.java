@@ -56,6 +56,7 @@ public final class SortEngine {
 
 	private static final class MergeGroup {
 		private final String itemId;
+		private final String displayName;
 		private final long variantKey;
 		private final int maxStackSize;
 		private int stableIndex;
@@ -63,6 +64,7 @@ public final class SortEngine {
 
 		MergeGroup(SortableItem first) {
 			this.itemId = first.itemId();
+			this.displayName = first.displayName();
 			this.variantKey = first.variantKey();
 			this.maxStackSize = first.maxStackSize();
 			this.stableIndex = first.stableIndex();
@@ -81,7 +83,7 @@ public final class SortEngine {
 			int remaining = totalCount;
 			while (remaining > 0) {
 				int stackCount = Math.min(remaining, maxStackSize);
-				stacks.add(new SortableItem(itemId, stackCount, maxStackSize, stableIndex, variantKey));
+				stacks.add(new SortableItem(itemId, displayName, stackCount, maxStackSize, stableIndex, variantKey));
 				remaining -= stackCount;
 			}
 			return stacks;

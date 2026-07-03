@@ -7,7 +7,8 @@ import java.util.Comparator;
 public enum SortKey {
 	MOD_ID(Comparator.comparing(SortableItem::modId)),
 	ITEM_ID(Comparator.comparing(SortableItem::itemId)),
-	COUNT(Comparator.comparingInt(SortableItem::count).reversed());
+	COUNT(Comparator.comparingInt(SortableItem::count).reversed()),
+	DISPLAY_NAME(Comparator.comparing(SortableItem::displayName, String.CASE_INSENSITIVE_ORDER));
 
 	private final Comparator<SortableItem> comparator;
 

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SortEngineTest {
 
 	private static SortableItem item(String itemId, int count, int maxStackSize, int stableIndex, long variantKey) {
-		return new SortableItem(itemId, count, maxStackSize, stableIndex, variantKey);
+		return new SortableItem(itemId, itemId, count, maxStackSize, stableIndex, variantKey);
 	}
 
 	@Test
@@ -101,6 +101,19 @@ class SortEngineTest {
 
 		List<String> order = result.items().stream().map(SortableItem::itemId).toList();
 		assertEquals(List.of("minecraft:apple", "minecraft:dirt", "modb:widget"), order);
+	}
+
+	@Test
+	void sortsByDisplayNameCaseInsensitivelyWhenConfigured() {
+		List<SortableItem> slots = List.of(
+				new SortableItem("mod:a", "zebra", 1, 64, 0, 0),
+				new SortableItem("mod:b", "apple", 1, 64, 1, 0),
+				new SortableItem("mod:c", "Banana", 1, 64, 2, 0));
+
+		SortResult result = SortEngine.sort(slots, new SortConfig(List.of(SortKey.DISPLAY_NAME)));
+
+		List<String> order = result.items().stream().map(SortableItem::displayName).toList();
+		assertEquals(List.of("apple", "Banana", "zebra"), order);
 	}
 
 	@Test

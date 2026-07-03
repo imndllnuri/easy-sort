@@ -8,10 +8,11 @@ import java.util.Objects;
  * merge (e.g. differently enchanted books) - it is an opaque identity token
  * supplied by the platform layer, not interpreted here.
  */
-public record SortableItem(String itemId, int count, int maxStackSize, int stableIndex, long variantKey) {
+public record SortableItem(String itemId, String displayName, int count, int maxStackSize, int stableIndex, long variantKey) {
 
 	public SortableItem {
 		Objects.requireNonNull(itemId, "itemId");
+		Objects.requireNonNull(displayName, "displayName");
 		if (itemId.isBlank()) {
 			throw new IllegalArgumentException("itemId must not be blank");
 		}

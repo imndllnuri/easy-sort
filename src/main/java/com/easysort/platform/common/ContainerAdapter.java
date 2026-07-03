@@ -48,7 +48,8 @@ public final class ContainerAdapter {
 			String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 			long variantKey = stack.getComponents().hashCode();
 			templates.putIfAbsent(new VariantKey(itemId, variantKey), stack);
-			slots.add(new SortableItem(itemId, stack.getCount(), container.getMaxStackSize(stack), i - fromSlot, variantKey));
+			slots.add(new SortableItem(itemId, stack.getHoverName().getString(), stack.getCount(),
+					container.getMaxStackSize(stack), i - fromSlot, variantKey));
 		}
 
 		SortResult result = SortEngine.sort(slots, config);

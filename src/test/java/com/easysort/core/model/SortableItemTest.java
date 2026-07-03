@@ -9,25 +9,25 @@ class SortableItemTest {
 
 	@Test
 	void modIdIsDerivedFromNamespace() {
-		SortableItem item = new SortableItem("modb:widget", 1, 64, 0, 0);
+		SortableItem item = new SortableItem("modb:widget", "Widget", 1, 64, 0, 0);
 
 		assertEquals("modb", item.modId());
 	}
 
 	@Test
 	void modIdFallsBackToWholeIdWithoutNamespace() {
-		SortableItem item = new SortableItem("widget", 1, 64, 0, 0);
+		SortableItem item = new SortableItem("widget", "Widget", 1, 64, 0, 0);
 
 		assertEquals("widget", item.modId());
 	}
 
 	@Test
 	void rejectsNonPositiveCount() {
-		assertThrows(IllegalArgumentException.class, () -> new SortableItem("minecraft:dirt", 0, 64, 0, 0));
+		assertThrows(IllegalArgumentException.class, () -> new SortableItem("minecraft:dirt", "Dirt", 0, 64, 0, 0));
 	}
 
 	@Test
 	void rejectsBlankItemId() {
-		assertThrows(IllegalArgumentException.class, () -> new SortableItem(" ", 1, 64, 0, 0));
+		assertThrows(IllegalArgumentException.class, () -> new SortableItem(" ", "Dirt", 1, 64, 0, 0));
 	}
 }

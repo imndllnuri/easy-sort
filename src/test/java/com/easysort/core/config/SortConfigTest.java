@@ -18,8 +18,8 @@ class SortConfigTest {
 	@Test
 	void emptyOrderComparatorFallsBackToStableIndex() {
 		SortConfig config = new SortConfig(List.of());
-		SortableItem first = new SortableItem("minecraft:zombie_head", 1, 64, 0, 0);
-		SortableItem second = new SortableItem("minecraft:apple", 1, 64, 1, 0);
+		SortableItem first = new SortableItem("minecraft:zombie_head", "Zombie Head", 1, 64, 0, 0);
+		SortableItem second = new SortableItem("minecraft:apple", "Apple", 1, 64, 1, 0);
 
 		assertEquals(-1, Integer.signum(config.comparator().compare(first, second)));
 	}
