@@ -1,6 +1,8 @@
 {
 	"easy-sort.button.sort": "Sort this container",
+	"easy-sort.button.sort_inventory": "Sort your inventory",
 	"easy-sort.button.settings": "Settings (coming soon)",
 	"easy-sort.button.restock": "Restock (coming soon)",
-	"easy-sort.button.quick_stack": "Quick Stack (coming soon)"
+	"easy-sort.button.quick_stack": "Quick Stack (coming soon)",
+	"key.easy-sort.sort_inventory": "Sort Inventory"
 }

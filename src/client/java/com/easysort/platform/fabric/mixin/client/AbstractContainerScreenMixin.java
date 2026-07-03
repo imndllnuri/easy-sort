@@ -2,6 +2,7 @@ package com.easysort.platform.fabric.mixin.client;
 
 import com.easysort.platform.fabric.client.widget.MiniButton;
 import com.easysort.platform.fabric.network.SortContainerPayload;
+import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -45,12 +46,21 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 	@Shadow
 	protected int titleLabelY;
 
+	@Shadow
+	protected int inventoryLabelY;
+
 	private AbstractContainerScreenMixin(Component title) {
 		super(title);
 	}
 
 	@Inject(method = "init", at = @At("TAIL"))
 	private void easysort$addSortButton(CallbackInfo ci) {
+		// Player-inventory sort is available on every container screen, since
+		// the player's own inventory grid is always shown somewhere in one.
+		int inventoryButtonY = this.topPos + this.inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
+		this.addRenderableWidget(easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY, true,
+				() -> ClientPlayNetworking.send(new SortPlayerInventoryPayload())));
+
 		if (!(this.menu instanceof ChestMenu)) {
 			return;
 		}
