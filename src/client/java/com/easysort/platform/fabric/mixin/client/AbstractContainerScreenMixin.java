@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
 
-	private static final int BUTTON_SIZE = 12;
+	private static final int BUTTON_SIZE = 10;
 	private static final int BUTTON_GAP = 1;
 	private static final int RIGHT_MARGIN = 7;
 
@@ -95,15 +95,17 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// matching the compact inline-with-title reference style.
 		int buttonY = this.topPos + this.titleLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 
-		this.addRenderableWidget(easysort$button("S", "easy-sort.button.sort", 0, buttonY, true,
+		// Left-to-right reading order: S, Q, R, G (indexFromRight counts from
+		// the right edge, so the rightmost button - G - is index 0).
+		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 0, buttonY, true,
+				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
+		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 1, buttonY, true,
+				() -> ClientPlayNetworking.send(new RestockPayload(this.menu.containerId))));
+		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 2, buttonY, true,
+				() -> ClientPlayNetworking.send(new QuickStackPayload(this.menu.containerId))));
+		this.addRenderableWidget(easysort$button("S", "easy-sort.button.sort", 3, buttonY, true,
 				() -> ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId,
 						EasySortClientConfig.getPrimarySortKey()))));
-		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 1, buttonY, true,
-				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
-		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 2, buttonY, true,
-				() -> ClientPlayNetworking.send(new RestockPayload(this.menu.containerId))));
-		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 3, buttonY, true,
-				() -> ClientPlayNetworking.send(new QuickStackPayload(this.menu.containerId))));
 	}
 
 	private MiniButton easysort$button(String glyph, String tooltipKey, int indexFromRight, int buttonY,
