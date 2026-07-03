@@ -4,12 +4,15 @@ import com.easysort.platform.fabric.client.widget.MiniButton;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.CreativeModeTab;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,8 +61,18 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// Player-inventory sort is available on every container screen, since
 		// the player's own inventory grid is always shown somewhere in one.
 		int inventoryButtonY = this.topPos + this.inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
-		this.addRenderableWidget(easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY, true,
-				() -> ClientPlayNetworking.send(new SortPlayerInventoryPayload())));
+		MiniButton inventoryButton = easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY,
+				true, () -> ClientPlayNetworking.send(new SortPlayerInventoryPayload()));
+		this.addRenderableWidget(inventoryButton);
+
+		// CreativeModeInventoryScreen reuses this same screen/widgets across all
+		// of its item-browsing tabs (switching tabs doesn't call init() again),
+		// so only the one "Inventory" tab that shows real player items should
+		// keep this button visible - re-checked every frame since tab changes
+		// don't fire any event we can hook once.
+		ScreenEvents.beforeRender((Screen) (Object) this).register((screen, graphics, mouseX, mouseY, tickDelta) ->
+				inventoryButton.visible = !(screen instanceof CreativeModeInventoryScreen)
+						|| CreativeModeInventoryScreenAccessor.easysort$getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY);
 
 		if (!(this.menu instanceof ChestMenu)) {
 			return;

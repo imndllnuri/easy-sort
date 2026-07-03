@@ -37,3 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Controls > Inventory) that fires while any container screen is open. Only
   ever sorts the player's own 36 hotbar+storage slots - armor and offhand
   are outside that range and are never touched.
+
+### Fixed
+
+- The "I" button no longer shows on Creative mode's item-browsing tabs
+  (Building Blocks, Natural Blocks, etc.) - it's only visible on Creative's
+  own "Inventory" tab, which is the one actually showing the player's items.
+  CreativeModeInventoryScreen reuses the same widgets across all of its tabs
+  without re-running screen init, so visibility is now re-checked every
+  frame instead of decided once.
