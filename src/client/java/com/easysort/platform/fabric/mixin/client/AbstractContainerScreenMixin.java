@@ -1,5 +1,7 @@
 package com.easysort.platform.fabric.mixin.client;
 
+import com.easysort.platform.fabric.client.config.EasySortClientConfig;
+import com.easysort.platform.fabric.client.screen.EasySortConfigScreen;
 import com.easysort.platform.fabric.client.widget.MiniButton;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
@@ -62,7 +64,8 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// the player's own inventory grid is always shown somewhere in one.
 		int inventoryButtonY = this.topPos + this.inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 		MiniButton inventoryButton = easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY,
-				true, () -> ClientPlayNetworking.send(new SortPlayerInventoryPayload()));
+				true, () -> ClientPlayNetworking.send(
+						new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey())));
 		this.addRenderableWidget(inventoryButton);
 
 		// CreativeModeInventoryScreen reuses this same screen/widgets across all
@@ -83,9 +86,10 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		int buttonY = this.topPos + this.titleLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 
 		this.addRenderableWidget(easysort$button("S", "easy-sort.button.sort", 0, buttonY, true,
-				() -> ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId))));
-		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 1, buttonY, false, () -> {
-		}));
+				() -> ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId,
+						EasySortClientConfig.getPrimarySortKey()))));
+		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 1, buttonY, true,
+				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
 		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 2, buttonY, false, () -> {
 		}));
 		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 3, buttonY, false, () -> {

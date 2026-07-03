@@ -1,5 +1,6 @@
 package com.easysort.platform.fabric.client;
 
+import com.easysort.platform.fabric.client.config.EasySortClientConfig;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -16,12 +17,14 @@ public final class EasySortClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		EasySortClientConfig.load();
+
 		// Only fires while a container-type screen is open, matching where the
 		// in-screen sort buttons live - not a fully global hotkey (yet).
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (SORT_INVENTORY_KEY.consumeClick()) {
 				if (client.screen instanceof AbstractContainerScreen<?>) {
-					ClientPlayNetworking.send(new SortPlayerInventoryPayload());
+					ClientPlayNetworking.send(new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey()));
 				}
 			}
 		});
