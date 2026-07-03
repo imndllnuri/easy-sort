@@ -1,29 +1,37 @@
 # Architecture
 
-## Package structure
+## Module & package structure
+
+Multi-module Gradle build (Architectury Loom), so the `core`/`platform`
+boundary is enforced by the build system, not just convention - `common`
+physically cannot depend on Fabric classes, since they're not even on its
+compile classpath.
 
 ```
-com.easysort
-├── core/            // pure Java, no Minecraft/Fabric imports
-│   ├── sort/         // SortEngine, SortKey, comparators, SortResult
-│   ├── transfer/       // TransferEngine, TransferResult (quick-stack / restock)
-│   ├── config/        // config data model (POJOs)
-│   └── model/         // loader-agnostic item/slot abstractions (SortableItem)
-├── platform/         // the only package allowed to depend on net.minecraft.* / net.fabricmc.*
-│   ├── fabric/         // Fabric entrypoints, mixins, registry glue
-│   │   ├── client/      // client-only: keybinds, screens, rendering, config, widgets
-│   │   ├── server/       // server-side packet handlers, container mutation
-│   │   └── network/      // networking payload definitions (shared client+server)
-│   └── common/         // Minecraft-touching logic that stays loader-neutral in spirit
-│       (ContainerAdapter bridges core to a live Container; MenuContainers
-│       generically locates a menu's backing Container - both vanilla-only,
-│       no Fabric imports)
-└── api/              // (future) public extension surface for other mods
+easy-sort/
+├── common/                    // Gradle module - zero net.minecraft.*/net.fabricmc.* imports
+│   └── com.easysort
+│       ├── core/                // SortEngine, TransferEngine, SortConfig, SortableItem, ...
+│       │   ├── sort/
+│       │   ├── transfer/          // quick-stack / restock
+│       │   ├── config/
+│       │   └── model/
+│       └── platform.common/     // Minecraft-touching but loader-neutral (ContainerAdapter,
+│                                    MenuContainers - vanilla-only, no Fabric imports)
+├── fabric/                    // Gradle module - Fabric-specific
+│   └── com.easysort.platform.fabric
+│       ├── client/              // keybinds, screens, rendering, config, widgets, mixins
+│       ├── server/              // packet handlers, container mutation
+│       └── network/             // networking payload definitions
+└── neoforge/                  // (planned) mirrors fabric/ using NeoForge's own APIs
 ```
 
-**Hard rule:** `core/` must never import `net.minecraft.*` or `net.fabricmc.*`. This is
-what keeps the sorting algorithm unit-testable without a Minecraft runtime, and what
-makes a future NeoForge module addition a mechanical package move instead of a rewrite.
+**Hard rule:** `common/` must never import `net.minecraft.*` or `net.fabricmc.*` outside
+of `platform.common` (which may use vanilla `net.minecraft.*` but never Fabric-specific
+classes). This is what keeps the sorting algorithm unit-testable without a Minecraft
+runtime, and what makes NeoForge support a new sibling module instead of a rewrite -
+verified in practice: `core/` and `platform.common/` moved into `common/` unchanged
+when the multi-module split happened.
 
 ## Client/server separation
 

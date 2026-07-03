@@ -37,10 +37,17 @@ automatically as part of `./gradlew build`.
 
 ## Project layout
 
+The project is a multi-module Gradle build (Architectury Loom): `common/`
+holds loader-agnostic code (`core/`, `platform/common/`), `fabric/` holds
+Fabric-specific code and resources. Bare Gradle task names (`build`, `test`,
+`runClient`, `runGameTest`) work from the repo root - Gradle delegates to
+whichever module actually defines them - but you can target a module
+explicitly too, e.g. `./gradlew :fabric:build`.
+
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the package structure and the
 loader-agnostic `core` / loader-specific `platform` boundary. New code that
-touches `net.minecraft.*` or `net.fabricmc.*` belongs under `platform/fabric`,
-never under `core`.
+touches `net.minecraft.*` or `net.fabricmc.*` belongs under `fabric/`, never
+under `common/`.
 
 ## Version matrix
 

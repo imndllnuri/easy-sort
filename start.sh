@@ -6,7 +6,7 @@ set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 TASK="${1:-runClient}"
-LOG_FILE="run/logs/latest.log"
+LOG_FILE="fabric/run/logs/latest.log"
 FAIL=0
 
 info()  { printf '\033[1;34m[start.sh]\033[0m %s\n' "$1"; }
@@ -37,7 +37,7 @@ else
 fi
 
 # 3. fabric.mod.json is valid JSON
-MOD_JSON="src/main/resources/fabric.mod.json"
+MOD_JSON="fabric/src/main/resources/fabric.mod.json"
 if [ ! -f "$MOD_JSON" ]; then
 	fail "$MOD_JSON is missing."
 elif command -v python3 >/dev/null 2>&1; then

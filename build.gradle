@@ -1,85 +1,56 @@
 plugins {
-	id 'fabric-loom' version '1.17.13'
-	id 'maven-publish'
+	id "architectury-plugin" version "${architectury_plugin_version}"
+	id "dev.architectury.loom" version "${architectury_loom_version}" apply false
 }
 
-version = project.mod_version
-group = project.maven_group
-
-base {
-	archivesName = project.archives_base_name
+architectury {
+	minecraft = rootProject.minecraft_version
 }
 
-repositories {
-	// Loom adds the essential Fabric/Minecraft repositories automatically.
-	// Only add repositories here for other mod dependencies or mapping data sources.
-	maven {
-		name = "ParchmentMC"
-		url = "https://maven.parchmentmc.org"
+subprojects {
+	apply plugin: "dev.architectury.loom"
+
+	loom {
+		silentMojangMappingsLicense()
 	}
-}
 
-loom {
-	splitEnvironmentSourceSets()
+	repositories {
+		maven {
+			name = "ParchmentMC"
+			url = "https://maven.parchmentmc.org"
+		}
+	}
 
-	mods {
-		"easy-sort" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
+	dependencies {
+		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+		mappings loom.layered() {
+			officialMojangMappings()
+			parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
 		}
 	}
 }
 
-fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "easy-sort-test"
-		enableGameTests = true
-		enableClientGameTests = false
+allprojects {
+	apply plugin: "java"
+	apply plugin: "architectury-plugin"
+	apply plugin: "maven-publish"
+
+	base {
+		archivesName = rootProject.archives_base_name
 	}
-}
 
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered() {
-		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
+	version = rootProject.mod_version
+	group = rootProject.maven_group
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
+		withSourcesJar()
 	}
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	testImplementation platform('org.junit:junit-bom:5.11.0')
-	testImplementation 'org.junit.jupiter:junit-jupiter'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-	withSourcesJar()
-}
-
-test {
-	useJUnitPlatform()
-}
-
-processResources {
-	inputs.property "version", project.version
-	filteringCharset "UTF-8"
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	it.options.release = 21
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}" }
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = "UTF-8"
+		it.options.release = 21
 	}
 }

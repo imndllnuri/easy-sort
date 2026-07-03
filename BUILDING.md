@@ -10,7 +10,8 @@
 ./gradlew build
 ```
 
-Output: `build/libs/easy-sort-<version>.jar` (plus a `-sources.jar`).
+Output: `fabric/build/libs/easy-sort-<version>.jar` (plus a `-sources.jar`) -
+multi-module Gradle build (Architectury Loom), see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Version matrix
 
