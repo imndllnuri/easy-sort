@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+issueTrackerURL="https://github.com/imndllnuri/easy-sort/issues"
+
+[[mods]]
+modId="easysort"
+version="${version}"
+displayName="Easy Sort"
+displayURL="https://github.com/imndllnuri/easy-sort"
+description='''
+A lightweight, vanilla-feel inventory and chest sorting mod.
+'''
+authors="imndllnuri"
+
+[[dependencies.easysort]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.10,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.easysort]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.10,1.21.11)"
+    ordering="NONE"
+    side="BOTH"

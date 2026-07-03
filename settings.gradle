@@ -24,3 +24,4 @@ rootProject.name = "easy-sort"
 
 include("common")
 include("fabric")
+include("neoforge")
