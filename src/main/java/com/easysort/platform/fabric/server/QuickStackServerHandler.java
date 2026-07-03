@@ -1,12 +1,12 @@
 package com.easysort.platform.fabric.server;
 
 import com.easysort.platform.common.ContainerAdapter;
+import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.fabric.network.QuickStackPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 
 public final class QuickStackServerHandler {
 
@@ -23,11 +23,11 @@ public final class QuickStackServerHandler {
 		if (menu.containerId != payload.containerId()) {
 			return;
 		}
-		if (!(menu instanceof ChestMenu chestMenu)) {
+		if (!MenuContainers.isSupported(menu)) {
 			return;
 		}
 
-		ContainerAdapter.quickStack(player.getInventory(), 0, Inventory.INVENTORY_SIZE, chestMenu.getContainer());
+		ContainerAdapter.quickStack(player.getInventory(), 0, Inventory.INVENTORY_SIZE, MenuContainers.extractContainer(menu));
 		menu.broadcastFullState();
 	}
 }

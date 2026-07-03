@@ -2,11 +2,11 @@ package com.easysort.platform.fabric.server;
 
 import com.easysort.core.config.SortConfig;
 import com.easysort.platform.common.ContainerAdapter;
+import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 
 /**
  * Handles the client's "sort this open container" request. Never trusts the
@@ -28,11 +28,11 @@ public final class SortContainerServerHandler {
 		if (menu.containerId != payload.containerId()) {
 			return;
 		}
-		if (!(menu instanceof ChestMenu chestMenu)) {
+		if (!MenuContainers.isSupported(menu)) {
 			return;
 		}
 
-		ContainerAdapter.sort(chestMenu.getContainer(), SortConfig.withPrimary(payload.primarySortKey()));
+		ContainerAdapter.sort(MenuContainers.extractContainer(menu), SortConfig.withPrimary(payload.primarySortKey()));
 		menu.broadcastFullState();
 	}
 }

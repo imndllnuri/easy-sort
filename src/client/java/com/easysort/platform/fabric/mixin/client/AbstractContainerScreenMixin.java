@@ -1,5 +1,6 @@
 package com.easysort.platform.fabric.mixin.client;
 
+import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.fabric.client.config.EasySortClientConfig;
 import com.easysort.platform.fabric.client.screen.EasySortConfigScreen;
 import com.easysort.platform.fabric.client.widget.MiniButton;
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.CreativeModeTab;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,10 +25,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Adds a sort button to any chest-like container screen (chest, double chest,
- * barrel, ender chest all share ChestMenu). No clean Fabric API hook exists
- * for adding a widget to an existing vanilla screen, so this is one of the
- * few mixins the project needs - see ARCHITECTURE.md.
+ * Adds the sort/settings/restock/quick-stack button row to any screen backed
+ * by a supported storage menu (see MenuContainers) - chest, double chest,
+ * barrel, ender chest, minecart with chest, and shulker box today. No clean
+ * Fabric API hook exists for adding a widget to an existing vanilla screen,
+ * so this is one of the few mixins the project needs - see ARCHITECTURE.md.
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
@@ -79,7 +80,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 				inventoryButton.visible = !(screen instanceof CreativeModeInventoryScreen)
 						|| CreativeModeInventoryScreenAccessor.easysort$getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY);
 
-		if (!(this.menu instanceof ChestMenu)) {
+		if (!MenuContainers.isSupported(this.menu)) {
 			return;
 		}
 

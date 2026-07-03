@@ -1,12 +1,12 @@
 package com.easysort.platform.fabric.server;
 
 import com.easysort.platform.common.ContainerAdapter;
+import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.fabric.network.RestockPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 
 public final class RestockServerHandler {
 
@@ -23,11 +23,11 @@ public final class RestockServerHandler {
 		if (menu.containerId != payload.containerId()) {
 			return;
 		}
-		if (!(menu instanceof ChestMenu chestMenu)) {
+		if (!MenuContainers.isSupported(menu)) {
 			return;
 		}
 
-		ContainerAdapter.restock(chestMenu.getContainer(), player.getInventory(), 0, Inventory.INVENTORY_SIZE);
+		ContainerAdapter.restock(MenuContainers.extractContainer(menu), player.getInventory(), 0, Inventory.INVENTORY_SIZE);
 		menu.broadcastFullState();
 	}
 }
