@@ -7,58 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0-alpha] - 2026-07-03
+
+First public alpha. Chest-type and player inventory sorting work end to end;
+config/settings and shulker box support are still in progress.
+
 ### Added
 
-- Initial project scaffold: Gradle/Loom build, package skeleton, CI workflow,
-  repository documentation.
-- Core sort engine (`core.sort.SortEngine`): merges partial stacks (capped at
-  each item's max stack size), sorts via a configurable `SortConfig`
-  (mod id / item id / count), deterministic and idempotent by construction.
-  Not yet wired into any in-game container - unit-tested only.
-- Sort button on chest-like containers (chest, double chest, barrel, ender
-  chest - all share vanilla's `ChestMenu`). Client sends a container-scoped
-  request; the server re-validates the player's currently open menu and
-  mutates only the container's own slots via `SortEngine` + `ContainerAdapter`.
-  Player inventory sorting and a hotkey are not implemented yet.
-- Restyled the sort button to a compact "S" glyph with a hover tooltip,
-  positioned as the first slot in a right-to-left button row so future
-  buttons (reverse order, quick-stack, etc.) can be added without
-  repositioning this one.
-- Moved the button row inside the container panel (previously it sat above
-  the window). Added disabled placeholder buttons for Settings (G), Restock
-  (R), and Quick Stack (Q) - not wired to any behavior yet, exact
-  position/order pending a design reference.
-- Replaced vanilla's beveled `Button` texture with a custom flat `MiniButton`
-  widget (12x12, plain fill + thin border) so the row reads as a compact
-  inline toolbar next to the container title instead of large 3D buttons
-  sitting in their own row. Sort tooltip reworded to "Sort this container".
-- Player inventory sorting: an "I" button next to the "Inventory" label on
-  every container screen, plus a rebindable hotkey (default `R`, under
-  Controls > Inventory) that fires while any container screen is open. Only
-  ever sorts the player's own 36 hotbar+storage slots - armor and offhand
-  are outside that range and are never touched.
-
-- Sort settings screen: a "Sort by" preference (Mod / Item ID / Count / Name)
-  persisted client-side to `config/easy-sort.json`, sent with every sort
-  request and used to build the server-side sort order - a per-player
-  preference, not a per-server one, so it follows you across servers. The
-  Settings ("G") button opens this screen instead of being a disabled
-  placeholder.
-- New "display name" sort key: alphabetical by the item's actual localized
-  name (e.g. "Oak Log"), distinct from the internal item id.
+- Core sort engine: merges partial stacks (capped at each item's max stack
+  size) and sorts deterministically via a configurable order (mod ID / item
+  ID / count / display name).
+- Sort button ("S") on chest-type containers: chest, double chest, barrel,
+  trapped chest, ender chest, and minecart with chest - all share vanilla's
+  `ChestMenu`. Server re-validates the player's currently open menu before
+  touching anything.
+- Player inventory sorting via an "I" button (available on any container
+  screen) and a rebindable hotkey (default `R`, Controls > Inventory) - only
+  ever touches the 36 hotbar+storage slots, never equipped armor/offhand.
+- Sort settings screen (Settings/"G" button): choose the primary sort key,
+  persisted per-player to `config/easy-sort.json` and sent with every sort
+  request, so it follows you across servers rather than being a per-server
+  setting.
+- Compact flat button row (custom `MiniButton` widget, no vanilla bevel
+  texture) positioned inline with the container title / "Inventory" label.
 
 ### Fixed
 
-- The "I" button no longer shows on Creative mode's item-browsing tabs
-  (Building Blocks, Natural Blocks, etc.) - it's only visible on Creative's
-  own "Inventory" tab, which is the one actually showing the player's items.
-  CreativeModeInventoryScreen reuses the same widgets across all of its tabs
-  without re-running screen init, so visibility is now re-checked every
-  frame instead of decided once.
+- The inventory-sort button no longer appears on Creative mode's
+  item-browsing tabs (Building Blocks, Natural Blocks, etc.) - only on
+  Creative's actual Inventory tab.
+
+### Known limitations
+
+- Shulker boxes are not supported yet (separate `ShulkerBoxMenu` class) -
+  planned post-MVP.
+- The Restock and Quick Stack buttons are visible but not yet functional
+  (disabled placeholders).
+- The config screen lets you choose one primary sort key, not a full
+  drag-and-drop multi-key ordering.
 
 ### Testing
 
-- Added GameTest integration coverage (`gametest` source set) for
+- GameTest integration coverage (`gametest` source set) for
   `ContainerAdapter` against real block entities/players/registries: chest
   merge+sort, max-stack-size capping, and confirming an inventory sort can
   never touch equipped armor/offhand. Runs automatically as part of

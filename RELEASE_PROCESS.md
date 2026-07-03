@@ -6,15 +6,17 @@
 3. Bump `mod_version` in `gradle.properties` per [VERSIONING.md](VERSIONING.md).
 4. Run the manual QA checklist in [TESTING.md](TESTING.md).
 5. Commit as `chore: release vX.Y.Z`.
-6. Tag the commit (`vX.Y.Z`) and push the tag — this triggers the release
-   GitHub Actions workflow, which builds the jar and publishes to Modrinth and
-   CurseForge.
-7. Create a GitHub Release from the tag, with:
-   - Version number
-   - Supported Minecraft version(s) and loader(s)
-   - Summary of new features / bug fixes
-   - Known issues
-   - Breaking changes and migration notes, if any (copy from CHANGELOG)
+6. Tag the commit (`vX.Y.Z`) and push the tag — this triggers
+   `.github/workflows/release.yml`, which builds the jar and creates a GitHub
+   Release with it attached.
+7. Modrinth/CurseForge publishing from that same workflow is currently
+   commented out pending project creation on both platforms - see
+   `PUBLISHING_CHECKLIST.md`. Once both projects exist, uncomment the publish
+   step and fill in the two project IDs; from then on every tag push
+   publishes to all three places automatically.
+8. Until Modrinth/CurseForge automation is active, upload the built jar to
+   each platform manually from the same `build/libs/*.jar` the workflow
+   produces.
 
 ## Cadence
 

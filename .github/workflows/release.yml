@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew build --no-daemon
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/libs/*.jar
+          generate_release_notes: true
+
+      # Modrinth/CurseForge publishing is inactive until the project exists on
+      # each platform - both require creating the project via their web UI
+      # first (icon, description, categories), which can't be scripted.
+      # See PUBLISHING_CHECKLIST.md. Once created, uncomment below and fill in
+      # the two project IDs:
+      #   Modrinth:    Project Settings -> General -> Project ID
+      #   CurseForge:  Project page -> About Project -> Project ID
+      #
+      # - name: Publish to Modrinth & CurseForge
+      #   uses: Kir-Antipov/mc-publish@v3.3
+      #   with:
+      #     modrinth-id: "FILL_IN_MODRINTH_PROJECT_ID"
+      #     modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+      #     curseforge-id: "FILL_IN_CURSEFORGE_PROJECT_ID"
+      #     curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+      #     files: build/libs/!(*-@(dev|sources)).jar
+      #     name: Easy Sort ${{ github.ref_name }}
+      #     version: ${{ github.ref_name }}
+      #     version-type: alpha
+      #     changelog-file: CHANGELOG.md
+      #     loaders: fabric
+      #     game-versions: 1.21.10
+      #     dependencies: fabric-api
