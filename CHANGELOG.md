@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1-alpha] - 2026-07-03
+
+No functional changes from 0.1.0-alpha. Republished to activate Modrinth and
+CurseForge publishing in the release workflow, now that both projects exist.
+
 ## [0.1.0-alpha] - 2026-07-03
 
 First public alpha. Chest-type and player inventory sorting work end to end;
