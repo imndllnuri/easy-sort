@@ -52,10 +52,10 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 	protected int imageWidth;
 
 	@Shadow
-	protected int titleLabelY;
+	protected int imageHeight;
 
 	@Shadow
-	protected int inventoryLabelY;
+	protected int titleLabelY;
 
 	private AbstractContainerScreenMixin(Component title) {
 		super(title);
@@ -65,7 +65,14 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 	private void easysort$addSortButton(CallbackInfo ci) {
 		// Player-inventory sort is available on every container screen, since
 		// the player's own inventory grid is always shown somewhere in one.
-		int inventoryButtonY = this.topPos + this.inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
+		// Derived from imageHeight ourselves rather than trusting the vanilla
+		// inventoryLabelY field directly: ShulkerBoxScreen bumps imageHeight
+		// by 1 in its own constructor (after the base AbstractContainerScreen
+		// constructor already computed inventoryLabelY from the un-bumped
+		// value) without recomputing it, unlike ContainerScreen (chest) which
+		// does - so on shulker boxes that field is stale by a pixel.
+		int inventoryLabelY = this.imageHeight - 94;
+		int inventoryButtonY = this.topPos + inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 		MiniButton inventoryButton = easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY,
 				true, () -> ClientPlayNetworking.send(
 						new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey())));
