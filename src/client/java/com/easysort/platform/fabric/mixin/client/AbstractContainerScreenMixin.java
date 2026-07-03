@@ -51,13 +51,32 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 			return;
 		}
 
-		int buttonY = this.topPos - BUTTON_SIZE - BUTTON_GAP;
+		// Inside the panel, just under the top border - previously this sat
+		// above the window entirely. Exact position/order is a placeholder
+		// pending a reference image.
+		int buttonY = this.topPos + BUTTON_GAP;
 
 		this.addRenderableWidget(Button.builder(Component.literal("S"), button ->
 						ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId)))
 				.tooltip(Tooltip.create(Component.translatable("easy-sort.button.sort")))
 				.bounds(easysort$buttonX(0), buttonY, BUTTON_SIZE, BUTTON_SIZE)
 				.build());
+
+		this.addRenderableWidget(easysort$placeholderButton("G", "easy-sort.button.settings", 1, buttonY));
+		this.addRenderableWidget(easysort$placeholderButton("R", "easy-sort.button.restock", 2, buttonY));
+		this.addRenderableWidget(easysort$placeholderButton("Q", "easy-sort.button.quick_stack", 3, buttonY));
+	}
+
+	// Not wired to any behavior yet - disabled so it reads as "coming soon"
+	// rather than a button that silently does nothing when clicked.
+	private Button easysort$placeholderButton(String glyph, String tooltipKey, int indexFromRight, int buttonY) {
+		Button button = Button.builder(Component.literal(glyph), button2 -> {
+					})
+				.tooltip(Tooltip.create(Component.translatable(tooltipKey)))
+				.bounds(easysort$buttonX(indexFromRight), buttonY, BUTTON_SIZE, BUTTON_SIZE)
+				.build();
+		button.active = false;
+		return button;
 	}
 
 	// indexFromRight 0 is the rightmost button; higher indices sit further left,

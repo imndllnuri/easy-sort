@@ -24,3 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   positioned as the first slot in a right-to-left button row so future
   buttons (reverse order, quick-stack, etc.) can be added without
   repositioning this one.
+- Moved the button row inside the container panel (previously it sat above
+  the window). Added disabled placeholder buttons for Settings (G), Restock
+  (R), and Quick Stack (Q) - not wired to any behavior yet, exact
+  position/order pending a design reference.
