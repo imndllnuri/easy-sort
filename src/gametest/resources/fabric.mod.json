@@ -6,7 +6,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"fabric-gametest": [
-			"com.easysort.gametest.ContainerAdapterGameTests"
+			"com.easysort.gametest.ContainerAdapterGameTests",
+			"com.easysort.gametest.TransferGameTests"
 		]
 	}
 }
