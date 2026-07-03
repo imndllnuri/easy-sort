@@ -79,7 +79,7 @@ if [ -f "$LOG_FILE" ]; then
 		warn "'easy-sort' was NOT found in $LOG_FILE - the mod may not have loaded."
 	fi
 
-	ERRORS="$(grep -iE '\[.*ERROR\]' "$LOG_FILE" | grep -viE 'telemetry|authlib|InvalidCredentialsException|Failed to fetch user properties|realms|X11: Standard cursor shape unavailable|GL ERROR|^\[.*\] \(Minecraft\) @ ' || true)"
+	ERRORS="$(grep -iE '\[.*ERROR\]' "$LOG_FILE" | grep -viE 'telemetry|authlib|InvalidCredentialsException|Failed to fetch user properties|Failed to retrieve profile key pair|realms|X11: Standard cursor shape unavailable|GL ERROR|^\[.*\] \(Minecraft\) @ ' || true)"
 	if [ -n "$ERRORS" ]; then
 		warn "Errors found in the log (excluding known-harmless offline-account auth errors):"
 		echo "$ERRORS" | tail -20
