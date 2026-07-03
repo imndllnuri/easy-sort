@@ -13,10 +13,22 @@ These run on every CI build and should stay fast (no Minecraft runtime).
 
 ## Integration tests
 
-Container-sorting scenarios that need a real `ScreenHandler`/world (chest sorting,
-double chests, nested shulkers) use Fabric's GameTest framework
-(`fabric-gametest-api-v1`), added starting at Milestone M3. GameTest runs are
-slower and are not required to gate every PR — see the CI workflow.
+`ContainerAdapter` is tested against real block entities, players, and item
+registries (not the hand-built `SortableItem` test doubles `core.sort`'s unit
+tests use) via Fabric's GameTest framework, in the `gametest` source set:
+
+```
+./gradlew runGameTest
+```
+
+Fabric Loom wires `runGameTest` into `check`, so it also runs as part of
+`./gradlew build` / CI on every PR - the actual test execution is only ~1-2
+seconds, the overhead is Minecraft's own startup, which the build already
+pays for regardless.
+
+Not covered by GameTest: the actual client→server networking round-trip and
+the button/mixin UI (creative-tab visibility, positioning). Those remain
+manual QA - see the checklist below.
 
 ## Manual QA checklist (pre-release)
 

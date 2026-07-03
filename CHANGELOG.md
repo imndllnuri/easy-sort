@@ -55,3 +55,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   CreativeModeInventoryScreen reuses the same widgets across all of its tabs
   without re-running screen init, so visibility is now re-checked every
   frame instead of decided once.
+
+### Testing
+
+- Added GameTest integration coverage (`gametest` source set) for
+  `ContainerAdapter` against real block entities/players/registries: chest
+  merge+sort, max-stack-size capping, and confirming an inventory sort can
+  never touch equipped armor/offhand. Runs automatically as part of
+  `./gradlew build`/CI.

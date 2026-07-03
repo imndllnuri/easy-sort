@@ -48,10 +48,14 @@
 | M6+ | Post-MVP features | Not started |
 | v2 | Extensibility, possible NeoForge split | Not started |
 
+**Done, not previously tracked here:**
+- GameTest integration coverage for `ContainerAdapter` (chest merge/sort,
+  max-stack-size capping, and - the one that mattered most - proving an
+  inventory sort can never touch equipped armor/offhand). Runs automatically
+  as part of `./gradlew build`/CI. Does not cover the networking round-trip
+  or button/mixin UI - those remain manual QA, see [TESTING.md](TESTING.md).
+
 **Queued, not yet started:**
-- GameTest integration coverage for the chest/player inventory sorting flow
-  (`ContainerAdapter`, networking, mixin) - currently verified by manual
-  play-testing only, see [TESTING.md](TESTING.md).
 - Publishing prerequisites: a real mod icon (placeholder needed - not
   something that can be generated here), and the release GitHub Actions
   workflow to auto-publish tagged builds to Modrinth/CurseForge (documented

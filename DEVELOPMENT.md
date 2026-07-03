@@ -24,8 +24,16 @@
 ```
 
 Tests under `core/` have no Minecraft dependency and run fast in isolation.
-Integration-level coverage (GameTest) is added starting at Milestone M3 — see
-[ROADMAP.md](ROADMAP.md).
+
+## Running integration tests (GameTest)
+
+```
+./gradlew runGameTest
+```
+
+Tests `ContainerAdapter` against real block entities/players/registries in
+the `gametest` source set — see [TESTING.md](TESTING.md). Also runs
+automatically as part of `./gradlew build`.
 
 ## Project layout
 
