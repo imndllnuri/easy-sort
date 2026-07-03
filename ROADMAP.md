@@ -31,8 +31,8 @@
 
 | Milestone | Scope | Status |
 |---|---|---|
-| M0 | Project scaffold, CI, empty mod loads in dev client | In progress |
-| M1 | Core sort engine, unit-tested, no Minecraft dependency | Not started |
+| M0 | Project scaffold, CI, empty mod loads in dev client | Done |
+| M1 | Core sort engine, unit-tested, no Minecraft dependency | Done |
 | M2 | Player inventory sorting (hotkey + packet round-trip) | Not started |
 | M3 | Chest + double chest sorting | Not started |
 | M4 | Config screen + persisted config | Not started |
