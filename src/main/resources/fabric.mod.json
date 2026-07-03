@@ -4,7 +4,9 @@
 	"version": "${version}",
 	"name": "Easy Sort",
 	"description": "A lightweight, vanilla-feel inventory and chest sorting mod.",
-	"authors": [],
+	"authors": [
+		"imndllnuri"
+	],
 	"contact": {
 		"homepage": "https://github.com/imndllnuri/easy-sort",
 		"issues": "https://github.com/imndllnuri/easy-sort/issues",
