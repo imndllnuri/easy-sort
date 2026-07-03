@@ -3,6 +3,7 @@ package com.easysort.platform.fabric.mixin.client;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
+
+	private static final int BUTTON_SIZE = 18;
+	private static final int BUTTON_GAP = 2;
 
 	@Shadow
 	@Final
@@ -47,13 +51,18 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 			return;
 		}
 
-		int buttonSize = 18;
-		int buttonX = this.leftPos + this.imageWidth - buttonSize;
-		int buttonY = this.topPos - buttonSize - 2;
+		int buttonY = this.topPos - BUTTON_SIZE - BUTTON_GAP;
 
-		this.addRenderableWidget(Button.builder(Component.translatable("easy-sort.button.sort"), button ->
+		this.addRenderableWidget(Button.builder(Component.literal("S"), button ->
 						ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId)))
-				.bounds(buttonX, buttonY, buttonSize, buttonSize)
+				.tooltip(Tooltip.create(Component.translatable("easy-sort.button.sort")))
+				.bounds(easysort$buttonX(0), buttonY, BUTTON_SIZE, BUTTON_SIZE)
 				.build());
+	}
+
+	// indexFromRight 0 is the rightmost button; higher indices sit further left,
+	// so additional buttons can be prepended without touching this one's position.
+	private int easysort$buttonX(int indexFromRight) {
+		return this.leftPos + this.imageWidth - (indexFromRight + 1) * (BUTTON_SIZE + BUTTON_GAP);
 	}
 }

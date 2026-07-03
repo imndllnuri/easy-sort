@@ -20,3 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   request; the server re-validates the player's currently open menu and
   mutates only the container's own slots via `SortEngine` + `ContainerAdapter`.
   Player inventory sorting and a hotkey are not implemented yet.
+- Restyled the sort button to a compact "S" glyph with a hover tooltip,
+  positioned as the first slot in a right-to-left button row so future
+  buttons (reverse order, quick-stack, etc.) can be added without
+  repositioning this one.
