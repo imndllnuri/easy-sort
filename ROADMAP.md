@@ -26,9 +26,11 @@
       open container already has at least one stack of into it, filling
       existing stacks first then the container's empty slots. Won't dump a
       brand-new item type into the container.
-- [ ] Shulker boxes (including nested inside player inventory) - confirmed
-      NOT covered yet, unlike barrels/ender chests: shulker boxes use their
-      own `ShulkerBoxMenu`, not `ChestMenu`
+- [x] Shulker boxes: all four buttons (S/G/R/Q) now work on placed shulker
+      boxes. Scoped to placed boxes only - vanilla has no way to open an
+      unplaced shulker box item directly, so "nested inside player
+      inventory" from the original wording here didn't correspond to a real
+      vanilla interaction.
 - [ ] Bundles (data-component sort, not slot sort)
 - [ ] Locked / ignored slots
 - [ ] Favorites
@@ -53,7 +55,7 @@
 | M3 | Player inventory sorting (hotkey + button) | Done |
 | M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Done |
 | M5 | v1.0 public release (Modrinth + CurseForge) | Alpha released (`v0.1.1-alpha`); v1.0 pending remaining post-MVP items |
-| M6+ | Post-MVP features | In progress - Restock/Quick Stack done, Shulker boxes next |
+| M6+ | Post-MVP features | In progress - Restock/Quick Stack/Shulker boxes done, Bundles next |
 | v2 | Extensibility, possible NeoForge split | Not started |
 
 **Done, not previously tracked here:**

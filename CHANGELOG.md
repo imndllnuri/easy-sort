@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0-alpha] - 2026-07-03
+
+### Added
+
+- Shulker box support: Sort, Settings, Restock, and Quick Stack all now work
+  on placed shulker boxes, not just chest-type containers.
+
+### Changed
+
+- Generalized how the mod finds a menu's backing `Container`: `ShulkerBoxMenu`
+  has no public getter for it (unlike `ChestMenu`), so `MenuContainers` reads
+  it off the menu's own slot list instead - a technique that works for any
+  vanilla container-backed menu, not just the two handled today, so adding
+  more container types later shouldn't need new per-type plumbing.
+
 ## [0.2.0-alpha] - 2026-07-03
 
 First post-MVP feature release: Restock and Quick Stack.
