@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0-alpha] - 2026-07-03
+
+First post-MVP feature release: Restock and Quick Stack.
+
 ### Added
 
 - Restock ("R" button): tops up the player's existing partial stacks from
