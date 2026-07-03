@@ -1,5 +1,6 @@
 package com.easysort.platform.fabric.network;
 
+import com.easysort.core.sort.SortKey;
 import com.easysort.platform.fabric.EasySort;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,13 +14,14 @@ import net.minecraft.resources.ResourceLocation;
  * touches the requesting player's own inventory regardless of what screen
  * (if any) is open.
  */
-public record SortPlayerInventoryPayload() implements CustomPacketPayload {
+public record SortPlayerInventoryPayload(SortKey primarySortKey) implements CustomPacketPayload {
 
 	public static final Type<SortPlayerInventoryPayload> TYPE =
 			new Type<>(ResourceLocation.fromNamespaceAndPath(EasySort.MOD_ID, "sort_player_inventory"));
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, SortPlayerInventoryPayload> CODEC =
-			StreamCodec.unit(new SortPlayerInventoryPayload());
+	public static final StreamCodec<RegistryFriendlyByteBuf, SortPlayerInventoryPayload> CODEC = StreamCodec.composite(
+			SortKeyCodec.CODEC, SortPlayerInventoryPayload::primarySortKey,
+			SortPlayerInventoryPayload::new);
 
 	public static void register() {
 		PayloadTypeRegistry.playC2S().register(TYPE, CODEC);

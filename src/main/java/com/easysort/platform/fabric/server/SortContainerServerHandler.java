@@ -32,7 +32,7 @@ public final class SortContainerServerHandler {
 			return;
 		}
 
-		ContainerAdapter.sort(chestMenu.getContainer(), SortConfig.defaultConfig());
+		ContainerAdapter.sort(chestMenu.getContainer(), SortConfig.withPrimary(payload.primarySortKey()));
 		menu.broadcastFullState();
 	}
 }

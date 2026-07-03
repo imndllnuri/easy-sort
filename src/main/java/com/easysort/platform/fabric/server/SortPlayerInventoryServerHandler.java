@@ -14,14 +14,15 @@ public final class SortPlayerInventoryServerHandler {
 
 	public static void register() {
 		ServerPlayNetworking.registerGlobalReceiver(SortPlayerInventoryPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(context.player())));
+				context.server().execute(() -> handle(payload, context.player())));
 	}
 
-	private static void handle(ServerPlayer player) {
+	private static void handle(SortPlayerInventoryPayload payload, ServerPlayer player) {
 		// Inventory.getContainerSize() includes armor/offhand past index
 		// INVENTORY_SIZE - bound the sort to the main 36 hotbar+storage slots
 		// only, or equipped gear would get scrambled into the grid.
-		ContainerAdapter.sort(player.getInventory(), 0, Inventory.INVENTORY_SIZE, SortConfig.defaultConfig());
+		ContainerAdapter.sort(player.getInventory(), 0, Inventory.INVENTORY_SIZE,
+				SortConfig.withPrimary(payload.primarySortKey()));
 		player.containerMenu.broadcastFullState();
 	}
 }
