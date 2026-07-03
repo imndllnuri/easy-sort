@@ -1,0 +1,12 @@
+{
+	"schemaVersion": 1,
+	"id": "easy-sort-test",
+	"version": "1.0.0",
+	"name": "Easy Sort Tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"com.easysort.gametest.ContainerAdapterGameTests"
+		]
+	}
+}
