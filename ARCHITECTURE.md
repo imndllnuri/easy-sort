@@ -6,14 +6,18 @@
 com.easysort
 ├── core/            // pure Java, no Minecraft/Fabric imports
 │   ├── sort/         // SortEngine, SortKey, comparators, SortResult
+│   ├── transfer/       // TransferEngine, TransferResult (quick-stack / restock)
 │   ├── config/        // config data model (POJOs)
 │   └── model/         // loader-agnostic item/slot abstractions (SortableItem)
 ├── platform/         // the only package allowed to depend on net.minecraft.* / net.fabricmc.*
 │   ├── fabric/         // Fabric entrypoints, mixins, registry glue
-│   │   ├── client/      // client-only: keybinds, screens, rendering
+│   │   ├── client/      // client-only: keybinds, screens, rendering, config, widgets
 │   │   ├── server/       // server-side packet handlers, container mutation
 │   │   └── network/      // networking payload definitions (shared client+server)
 │   └── common/         // Minecraft-touching logic that stays loader-neutral in spirit
+│       (ContainerAdapter bridges core to a live Container; MenuContainers
+│       generically locates a menu's backing Container - both vanilla-only,
+│       no Fabric imports)
 └── api/              // (future) public extension surface for other mods
 ```
 
@@ -23,13 +27,16 @@ makes a future NeoForge module addition a mechanical package move instead of a r
 
 ## Client/server separation
 
-Sorting mutates server-authoritative inventory state:
+Sorting and transfers (quick-stack, restock) mutate server-authoritative
+inventory state:
 
-1. Client sends an intent packet ("sort this open container using preset X") on
-   hotkey press.
-2. Server validates (is this container actually open for this player? are locked
-   slots respected?) and performs the mutation via the shared `core/sort` engine.
-3. Vanilla slot-sync propagates the result back to the client.
+1. Client sends an intent packet (e.g. "sort this open container using
+   preset X") on a button click or hotkey press.
+2. Server re-validates against the player's actual currently-open menu -
+   never trusts the client's claim about which container is open - and
+   performs the mutation via the shared `core/sort` or `core/transfer` engine.
+3. The server forces a full menu resync (`broadcastFullState()`) back to the
+   client, since these mutations bypass the normal slot-click sync path.
 
 Singleplayer runs an internal server and goes through the exact same path — there is
 no separate client-only "just sort locally" shortcut, since that would reopen the
@@ -59,8 +66,12 @@ version port.
 
 - Unit tests (JUnit 5) cover all of `core/` with zero Minecraft dependency —
   fast, run on every CI build.
-- GameTest (`fabric-gametest-api-v1`) covers real container-sorting scenarios once
-  container sorting lands (Milestone M3). See [TESTING.md](TESTING.md).
+- GameTest (`fabric-gametest-api-v1`, `gametest` source set) covers
+  `ContainerAdapter`/`MenuContainers` against real block entities, players,
+  and item registries - not just the hand-built `SortableItem` test doubles
+  the unit tests use. Runs automatically as part of `./gradlew build`/CI.
+  Does not cover the networking round-trip or button/mixin UI; those remain
+  manual QA. See [TESTING.md](TESTING.md).
 
 ## Versioning of this document
 

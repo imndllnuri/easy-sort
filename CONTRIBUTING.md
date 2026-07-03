@@ -27,6 +27,6 @@ instead.
 
 - Prefer composition over inheritance for sorting strategies (comparators).
 - No new abstractions without a concrete second use case.
-- Keep the sorting core (`core/sort`) dependency-free and unit-testable.
+- Keep `core/` (sorting, transfers, config) dependency-free and unit-testable.
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for local environment setup.
