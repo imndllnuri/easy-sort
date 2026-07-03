@@ -28,3 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   the window). Added disabled placeholder buttons for Settings (G), Restock
   (R), and Quick Stack (Q) - not wired to any behavior yet, exact
   position/order pending a design reference.
+- Replaced vanilla's beveled `Button` texture with a custom flat `MiniButton`
+  widget (12x12, plain fill + thin border) so the row reads as a compact
+  inline toolbar next to the container title instead of large 3D buttons
+  sitting in their own row. Sort tooltip reworded to "Sort this container".

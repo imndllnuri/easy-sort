@@ -1,8 +1,8 @@
 package com.easysort.platform.fabric.mixin.client;
 
+import com.easysort.platform.fabric.client.widget.MiniButton;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -25,8 +25,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
 
-	private static final int BUTTON_SIZE = 18;
-	private static final int BUTTON_GAP = 2;
+	private static final int BUTTON_SIZE = 12;
+	private static final int BUTTON_GAP = 1;
+	private static final int RIGHT_MARGIN = 7;
 
 	@Shadow
 	@Final
@@ -41,6 +42,9 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 	@Shadow
 	protected int imageWidth;
 
+	@Shadow
+	protected int titleLabelY;
+
 	private AbstractContainerScreenMixin(Component title) {
 		super(title);
 	}
@@ -51,37 +55,32 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 			return;
 		}
 
-		// Inside the panel, just under the top border - previously this sat
-		// above the window entirely. Exact position/order is a placeholder
-		// pending a reference image.
-		int buttonY = this.topPos + BUTTON_GAP;
+		// Vertically centered on the title row rather than a separate row,
+		// matching the compact inline-with-title reference style.
+		int buttonY = this.topPos + this.titleLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 
-		this.addRenderableWidget(Button.builder(Component.literal("S"), button ->
-						ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId)))
-				.tooltip(Tooltip.create(Component.translatable("easy-sort.button.sort")))
-				.bounds(easysort$buttonX(0), buttonY, BUTTON_SIZE, BUTTON_SIZE)
-				.build());
-
-		this.addRenderableWidget(easysort$placeholderButton("G", "easy-sort.button.settings", 1, buttonY));
-		this.addRenderableWidget(easysort$placeholderButton("R", "easy-sort.button.restock", 2, buttonY));
-		this.addRenderableWidget(easysort$placeholderButton("Q", "easy-sort.button.quick_stack", 3, buttonY));
+		this.addRenderableWidget(easysort$button("S", "easy-sort.button.sort", 0, buttonY, true,
+				() -> ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId))));
+		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 1, buttonY, false, () -> {
+		}));
+		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 2, buttonY, false, () -> {
+		}));
+		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 3, buttonY, false, () -> {
+		}));
 	}
 
-	// Not wired to any behavior yet - disabled so it reads as "coming soon"
-	// rather than a button that silently does nothing when clicked.
-	private Button easysort$placeholderButton(String glyph, String tooltipKey, int indexFromRight, int buttonY) {
-		Button button = Button.builder(Component.literal(glyph), button2 -> {
-					})
-				.tooltip(Tooltip.create(Component.translatable(tooltipKey)))
-				.bounds(easysort$buttonX(indexFromRight), buttonY, BUTTON_SIZE, BUTTON_SIZE)
-				.build();
-		button.active = false;
+	private MiniButton easysort$button(String glyph, String tooltipKey, int indexFromRight, int buttonY,
+			boolean enabled, Runnable onPress) {
+		MiniButton button = new MiniButton(easysort$buttonX(indexFromRight), buttonY, BUTTON_SIZE,
+				Component.literal(glyph), onPress);
+		button.setTooltip(Tooltip.create(Component.translatable(tooltipKey)));
+		button.active = enabled;
 		return button;
 	}
 
 	// indexFromRight 0 is the rightmost button; higher indices sit further left,
 	// so additional buttons can be prepended without touching this one's position.
 	private int easysort$buttonX(int indexFromRight) {
-		return this.leftPos + this.imageWidth - (indexFromRight + 1) * (BUTTON_SIZE + BUTTON_GAP);
+		return this.leftPos + this.imageWidth - RIGHT_MARGIN - (indexFromRight + 1) * (BUTTON_SIZE + BUTTON_GAP);
 	}
 }
