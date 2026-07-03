@@ -3,6 +3,8 @@ package com.easysort.platform.fabric.mixin.client;
 import com.easysort.platform.fabric.client.config.EasySortClientConfig;
 import com.easysort.platform.fabric.client.screen.EasySortConfigScreen;
 import com.easysort.platform.fabric.client.widget.MiniButton;
+import com.easysort.platform.fabric.network.QuickStackPayload;
+import com.easysort.platform.fabric.network.RestockPayload;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -90,10 +92,10 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 						EasySortClientConfig.getPrimarySortKey()))));
 		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 1, buttonY, true,
 				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
-		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 2, buttonY, false, () -> {
-		}));
-		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 3, buttonY, false, () -> {
-		}));
+		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 2, buttonY, true,
+				() -> ClientPlayNetworking.send(new RestockPayload(this.menu.containerId))));
+		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 3, buttonY, true,
+				() -> ClientPlayNetworking.send(new QuickStackPayload(this.menu.containerId))));
 	}
 
 	private MiniButton easysort$button(String glyph, String tooltipKey, int indexFromRight, int buttonY,

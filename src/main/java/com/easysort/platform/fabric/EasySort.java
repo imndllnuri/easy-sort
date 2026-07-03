@@ -1,7 +1,11 @@
 package com.easysort.platform.fabric;
 
+import com.easysort.platform.fabric.network.QuickStackPayload;
+import com.easysort.platform.fabric.network.RestockPayload;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
+import com.easysort.platform.fabric.server.QuickStackServerHandler;
+import com.easysort.platform.fabric.server.RestockServerHandler;
 import com.easysort.platform.fabric.server.SortContainerServerHandler;
 import com.easysort.platform.fabric.server.SortPlayerInventoryServerHandler;
 import net.fabricmc.api.ModInitializer;
@@ -19,5 +23,9 @@ public final class EasySort implements ModInitializer {
 		SortContainerServerHandler.register();
 		SortPlayerInventoryPayload.register();
 		SortPlayerInventoryServerHandler.register();
+		QuickStackPayload.register();
+		QuickStackServerHandler.register();
+		RestockPayload.register();
+		RestockServerHandler.register();
 	}
 }
