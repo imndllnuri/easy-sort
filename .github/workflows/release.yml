@@ -31,6 +31,7 @@ jobs:
         with:
           files: build/libs/*.jar
           generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-alpha') || contains(github.ref_name, '-beta') }}
 
       - name: Publish to Modrinth & CurseForge
         uses: Kir-Antipov/mc-publish@v3.3
