@@ -4,6 +4,7 @@
 	"version": "${version}",
 	"name": "Easy Sort",
 	"description": "A lightweight, vanilla-feel inventory and chest sorting mod.",
+	"icon": "assets/easy-sort/icon.png",
 	"authors": [
 		"imndllnuri"
 	],
