@@ -24,11 +24,22 @@ public final class ContainerAdapter {
 	}
 
 	public static void sort(Container container, SortConfig config) {
-		int size = container.getContainerSize();
-		List<SortableItem> slots = new ArrayList<>(size);
+		sort(container, 0, container.getContainerSize(), config);
+	}
+
+	/**
+	 * Sorts only slots [fromSlot, toSlotExclusive) of the container, leaving
+	 * everything outside that range untouched. Needed for the player's own
+	 * Inventory: its Container view exposes armor/offhand past index
+	 * Inventory.INVENTORY_SIZE, and those must never be reordered into the
+	 * main inventory grid.
+	 */
+	public static void sort(Container container, int fromSlot, int toSlotExclusive, SortConfig config) {
+		int rangeSize = toSlotExclusive - fromSlot;
+		List<SortableItem> slots = new ArrayList<>(rangeSize);
 		Map<VariantKey, ItemStack> templates = new HashMap<>();
 
-		for (int i = 0; i < size; i++) {
+		for (int i = fromSlot; i < toSlotExclusive; i++) {
 			ItemStack stack = container.getItem(i);
 			if (stack.isEmpty()) {
 				slots.add(null);
@@ -37,19 +48,20 @@ public final class ContainerAdapter {
 			String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 			long variantKey = stack.getComponents().hashCode();
 			templates.putIfAbsent(new VariantKey(itemId, variantKey), stack);
-			slots.add(new SortableItem(itemId, stack.getCount(), container.getMaxStackSize(stack), i, variantKey));
+			slots.add(new SortableItem(itemId, stack.getCount(), container.getMaxStackSize(stack), i - fromSlot, variantKey));
 		}
 
 		SortResult result = SortEngine.sort(slots, config);
 		List<SortableItem> sorted = result.items();
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < rangeSize; i++) {
+			int slotIndex = fromSlot + i;
 			if (i < sorted.size()) {
 				SortableItem item = sorted.get(i);
 				ItemStack template = templates.get(new VariantKey(item.itemId(), item.variantKey()));
-				container.setItem(i, template.copyWithCount(item.count()));
+				container.setItem(slotIndex, template.copyWithCount(item.count()));
 			} else {
-				container.setItem(i, ItemStack.EMPTY);
+				container.setItem(slotIndex, ItemStack.EMPTY);
 			}
 		}
 		container.setChanged();
