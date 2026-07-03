@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Restock ("R" button): tops up the player's existing partial stacks from
+  the open container - never creates a new stack in an empty inventory slot.
+- Quick Stack ("Q" button): moves everything in the player's inventory that
+  the open container already contains into it, filling existing stacks
+  first and then the container's empty slots.
+- New `core.transfer.TransferEngine`, tested independently of Minecraft
+  (unit tests) and against real containers/players (GameTest), including
+  confirming neither operation can ever touch equipped armor/offhand.
+
 ## [0.1.1-alpha] - 2026-07-03
 
 No functional changes from 0.1.0-alpha. Republished to activate Modrinth and

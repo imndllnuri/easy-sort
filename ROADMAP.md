@@ -18,6 +18,14 @@
 
 ## Post-MVP (v1.x)
 
+- [x] Restock ("R"): tops up existing partial stacks in the player's
+      inventory from the open container - never creates a new stack in an
+      empty slot, so it can't hand you item types you weren't already
+      carrying.
+- [x] Quick Stack ("Q"): moves everything in the player's inventory that the
+      open container already has at least one stack of into it, filling
+      existing stacks first then the container's empty slots. Won't dump a
+      brand-new item type into the container.
 - [ ] Shulker boxes (including nested inside player inventory) - confirmed
       NOT covered yet, unlike barrels/ender chests: shulker boxes use their
       own `ShulkerBoxMenu`, not `ChestMenu`
@@ -44,8 +52,8 @@
 | M2 | Chest-type container sorting (sort button, no hotkey yet) | Done |
 | M3 | Player inventory sorting (hotkey + button) | Done |
 | M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Done |
-| M5 | v1.0 public release (Modrinth + CurseForge) | Queued next |
-| M6+ | Post-MVP features | Not started |
+| M5 | v1.0 public release (Modrinth + CurseForge) | Alpha released (`v0.1.1-alpha`); v1.0 pending remaining post-MVP items |
+| M6+ | Post-MVP features | In progress - Restock/Quick Stack done, Shulker boxes next |
 | v2 | Extensibility, possible NeoForge split | Not started |
 
 **Done, not previously tracked here:**
