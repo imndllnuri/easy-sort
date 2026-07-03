@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "easy-sort",
+	"version": "${version}",
+	"name": "Easy Sort",
+	"description": "A lightweight, vanilla-feel inventory and chest sorting mod.",
+	"authors": [],
+	"contact": {
+		"homepage": "https://github.com/imndllnuri/easy-sort",
+		"issues": "https://github.com/imndllnuri/easy-sort/issues",
+		"sources": "https://github.com/imndllnuri/easy-sort"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.easysort.platform.fabric.EasySort"
+		],
+		"client": [
+			"com.easysort.platform.fabric.client.EasySortClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21.10",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
