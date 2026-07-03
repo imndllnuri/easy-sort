@@ -55,11 +55,11 @@
   as part of `./gradlew build`/CI. Does not cover the networking round-trip
   or button/mixin UI - those remain manual QA, see [TESTING.md](TESTING.md).
 
-**Queued, not yet started:**
-- Publishing prerequisites: a real mod icon (placeholder needed - not
-  something that can be generated here), and the release GitHub Actions
-  workflow to auto-publish tagged builds to Modrinth/CurseForge (documented
-  in [RELEASE_PROCESS.md](RELEASE_PROCESS.md) but not yet built).
+**Also done, not previously tracked here:**
+- Release automation (`.github/workflows/release.yml`): tag push builds the
+  jar, creates a GitHub Release, and publishes to Modrinth + CurseForge.
+  Confirmed working end to end on `v0.1.1-alpha`. Real project icon is still
+  a placeholder - see `PUBLISHING_CHECKLIST.md`.
 
 Full rationale and trade-offs behind this roadmap live in the original project
 planning doc; this file is the living, updated summary.
