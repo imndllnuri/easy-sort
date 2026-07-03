@@ -2,10 +2,13 @@
 
 ## MVP (targeting v1.0)
 
-- [ ] Player inventory sorting (hotkey + optional in-screen button)
+- [x] Player inventory sorting (hotkey + in-screen button, "I", available on
+      any container screen - only touches the main 36 hotbar+storage slots,
+      never equipped armor/offhand)
 - [x] Chest sorting, including double chests (button only - also works on
       barrels and ender chests for free, since they share vanilla's `ChestMenu`)
-- [ ] Configurable hotkey
+- [x] Configurable hotkey (default `R`, rebindable in vanilla's Controls
+      menu under Inventory - only fires while a container screen is open)
 - [x] Partial-stack merging
 - [x] Stable, deterministic sort algorithm
 - [ ] Configurable sort order (config screen + file) - currently fixed to the
@@ -36,11 +39,15 @@
 | M0 | Project scaffold, CI, empty mod loads in dev client | Done |
 | M1 | Core sort engine, unit-tested, no Minecraft dependency | Done |
 | M2 | Chest-type container sorting (sort button, no hotkey yet) | Done |
-| M3 | Player inventory sorting (hotkey + button) | Not started |
-| M4 | Config screen + persisted config | Not started |
+| M3 | Player inventory sorting (hotkey + button) | Done |
+| M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Queued next |
 | M5 | v1.0 public release (Modrinth + CurseForge) | Not started |
 | M6+ | Post-MVP features | Not started |
 | v2 | Extensibility, possible NeoForge split | Not started |
+
+**Queued, not yet started:** GameTest integration coverage for the chest/player
+inventory sorting flow (`ContainerAdapter`, networking, mixin) - currently
+verified by manual play-testing only, see [TESTING.md](TESTING.md).
 
 Full rationale and trade-offs behind this roadmap live in the original project
 planning doc; this file is the living, updated summary.

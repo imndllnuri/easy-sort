@@ -32,3 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   widget (12x12, plain fill + thin border) so the row reads as a compact
   inline toolbar next to the container title instead of large 3D buttons
   sitting in their own row. Sort tooltip reworded to "Sort this container".
+- Player inventory sorting: an "I" button next to the "Inventory" label on
+  every container screen, plus a rebindable hotkey (default `R`, under
+  Controls > Inventory) that fires while any container screen is open. Only
+  ever sorts the player's own 36 hotbar+storage slots - armor and offhand
+  are outside that range and are never touched.
