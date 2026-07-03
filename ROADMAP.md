@@ -11,13 +11,16 @@
       menu under Inventory - only fires while a container screen is open)
 - [x] Partial-stack merging
 - [x] Stable, deterministic sort algorithm
-- [ ] Configurable sort order (config screen + file) - currently fixed to the
-      default mod id / item id order, not yet user-configurable in-game
+- [x] Configurable sort order (config screen + file) - a "Sort by" preference
+      (mod / item ID / count / name) persisted client-side, sent with every
+      sort request. No drag-and-drop multi-key reordering yet, just choosing
+      the primary key (see ROADMAP note below).
 
 ## Post-MVP (v1.x)
 
-- [ ] Shulker boxes (including nested inside player inventory)
-- [ ] Barrels
+- [ ] Shulker boxes (including nested inside player inventory) - confirmed
+      NOT covered yet, unlike barrels/ender chests: shulker boxes use their
+      own `ShulkerBoxMenu`, not `ChestMenu`
 - [ ] Bundles (data-component sort, not slot sort)
 - [ ] Locked / ignored slots
 - [ ] Favorites
@@ -40,14 +43,19 @@
 | M1 | Core sort engine, unit-tested, no Minecraft dependency | Done |
 | M2 | Chest-type container sorting (sort button, no hotkey yet) | Done |
 | M3 | Player inventory sorting (hotkey + button) | Done |
-| M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Queued next |
-| M5 | v1.0 public release (Modrinth + CurseForge) | Not started |
+| M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Done |
+| M5 | v1.0 public release (Modrinth + CurseForge) | Queued next |
 | M6+ | Post-MVP features | Not started |
 | v2 | Extensibility, possible NeoForge split | Not started |
 
-**Queued, not yet started:** GameTest integration coverage for the chest/player
-inventory sorting flow (`ContainerAdapter`, networking, mixin) - currently
-verified by manual play-testing only, see [TESTING.md](TESTING.md).
+**Queued, not yet started:**
+- GameTest integration coverage for the chest/player inventory sorting flow
+  (`ContainerAdapter`, networking, mixin) - currently verified by manual
+  play-testing only, see [TESTING.md](TESTING.md).
+- Publishing prerequisites: a real mod icon (placeholder needed - not
+  something that can be generated here), and the release GitHub Actions
+  workflow to auto-publish tagged builds to Modrinth/CurseForge (documented
+  in [RELEASE_PROCESS.md](RELEASE_PROCESS.md) but not yet built).
 
 Full rationale and trade-offs behind this roadmap live in the original project
 planning doc; this file is the living, updated summary.

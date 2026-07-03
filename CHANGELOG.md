@@ -38,6 +38,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   ever sorts the player's own 36 hotbar+storage slots - armor and offhand
   are outside that range and are never touched.
 
+- Sort settings screen: a "Sort by" preference (Mod / Item ID / Count / Name)
+  persisted client-side to `config/easy-sort.json`, sent with every sort
+  request and used to build the server-side sort order - a per-player
+  preference, not a per-server one, so it follows you across servers. The
+  Settings ("G") button opens this screen instead of being a disabled
+  placeholder.
+- New "display name" sort key: alphabetical by the item's actual localized
+  name (e.g. "Oak Log"), distinct from the internal item id.
+
 ### Fixed
 
 - The "I" button no longer shows on Creative mode's item-browsing tabs
