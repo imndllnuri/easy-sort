@@ -15,3 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   each item's max stack size), sorts via a configurable `SortConfig`
   (mod id / item id / count), deterministic and idempotent by construction.
   Not yet wired into any in-game container - unit-tested only.
+- Sort button on chest-like containers (chest, double chest, barrel, ender
+  chest - all share vanilla's `ChestMenu`). Client sends a container-scoped
+  request; the server re-validates the player's currently open menu and
+  mutates only the container's own slots via `SortEngine` + `ContainerAdapter`.
+  Player inventory sorting and a hotkey are not implemented yet.

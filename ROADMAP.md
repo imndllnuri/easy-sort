@@ -3,11 +3,13 @@
 ## MVP (targeting v1.0)
 
 - [ ] Player inventory sorting (hotkey + optional in-screen button)
-- [ ] Chest sorting, including double chests
+- [x] Chest sorting, including double chests (button only - also works on
+      barrels and ender chests for free, since they share vanilla's `ChestMenu`)
 - [ ] Configurable hotkey
-- [ ] Partial-stack merging
-- [ ] Stable, deterministic sort algorithm
-- [ ] Configurable sort order (config screen + file)
+- [x] Partial-stack merging
+- [x] Stable, deterministic sort algorithm
+- [ ] Configurable sort order (config screen + file) - currently fixed to the
+      default mod id / item id order, not yet user-configurable in-game
 
 ## Post-MVP (v1.x)
 
@@ -33,8 +35,8 @@
 |---|---|---|
 | M0 | Project scaffold, CI, empty mod loads in dev client | Done |
 | M1 | Core sort engine, unit-tested, no Minecraft dependency | Done |
-| M2 | Player inventory sorting (hotkey + packet round-trip) | Not started |
-| M3 | Chest + double chest sorting | Not started |
+| M2 | Chest-type container sorting (sort button, no hotkey yet) | Done |
+| M3 | Player inventory sorting (hotkey + button) | Not started |
 | M4 | Config screen + persisted config | Not started |
 | M5 | v1.0 public release (Modrinth + CurseForge) | Not started |
 | M6+ | Post-MVP features | Not started |
