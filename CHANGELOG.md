@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.1-beta] - 2026-07-04
+
+First beta: MVP + all planned post-MVP features (Restock, Quick Stack,
+shulker boxes) are done on both Fabric and NeoForge. No functional changes
+from 0.4.0-alpha - this release marks a shift in confidence, not new
+features, ahead of real dedicated-server testing.
+
 ### Changed
 
 - Replaced the placeholder "ES" icon with a real one (chest + sparkle) on
