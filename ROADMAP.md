@@ -43,7 +43,6 @@
 - [ ] In-container search
 - [ ] Additional sort keys: durability, enchantments, rarity, tags, custom comparator
 - [ ] Public extension API for other mods
-- [ ] NeoForge support (module split, see [ARCHITECTURE.md](ARCHITECTURE.md))
 
 ## Milestones
 
@@ -56,7 +55,8 @@
 | M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Done |
 | M5 | v1.0 public release (Modrinth + CurseForge) | Alpha released (`v0.1.1-alpha`); v1.0 pending remaining post-MVP items |
 | M6+ | Post-MVP features | In progress - Restock/Quick Stack/Shulker boxes done, Bundles next |
-| v2 | Extensibility, possible NeoForge split | Not started |
+| — | NeoForge support (module split + full feature port, see [ARCHITECTURE.md](ARCHITECTURE.md)) | Feature-complete on `feature/neoforge-support`; pending manual QA and merge/release |
+| v2 | Extensibility | Not started |
 
 **Done, not previously tracked here:**
 - GameTest integration coverage for `ContainerAdapter` (chest merge/sort,

@@ -1,29 +1,51 @@
 # Architecture
 
-## Package structure
+## Module & package structure
+
+Multi-module Gradle build (Architectury Loom), so the `core`/`platform`
+boundary is enforced by the build system, not just convention - `common`
+physically cannot depend on Fabric classes, since they're not even on its
+compile classpath.
 
 ```
-com.easysort
-├── core/            // pure Java, no Minecraft/Fabric imports
-│   ├── sort/         // SortEngine, SortKey, comparators, SortResult
-│   ├── transfer/       // TransferEngine, TransferResult (quick-stack / restock)
-│   ├── config/        // config data model (POJOs)
-│   └── model/         // loader-agnostic item/slot abstractions (SortableItem)
-├── platform/         // the only package allowed to depend on net.minecraft.* / net.fabricmc.*
-│   ├── fabric/         // Fabric entrypoints, mixins, registry glue
-│   │   ├── client/      // client-only: keybinds, screens, rendering, config, widgets
-│   │   ├── server/       // server-side packet handlers, container mutation
-│   │   └── network/      // networking payload definitions (shared client+server)
-│   └── common/         // Minecraft-touching logic that stays loader-neutral in spirit
-│       (ContainerAdapter bridges core to a live Container; MenuContainers
-│       generically locates a menu's backing Container - both vanilla-only,
-│       no Fabric imports)
-└── api/              // (future) public extension surface for other mods
+easy-sort/
+├── common/                    // Gradle module - zero net.minecraft.*/net.fabricmc.* imports
+│   └── com.easysort
+│       ├── core/                // SortEngine, TransferEngine, SortConfig, SortableItem, ...
+│       │   ├── sort/
+│       │   ├── transfer/          // quick-stack / restock
+│       │   ├── config/
+│       │   └── model/
+│       └── platform.common/     // Minecraft-touching but loader-neutral (ContainerAdapter,
+│                                    MenuContainers - vanilla-only, no Fabric imports)
+├── fabric/                    // Gradle module - Fabric-specific
+│   └── com.easysort.platform.fabric
+│       ├── client/              // keybinds, screens, rendering, config, widgets, mixins
+│       ├── server/              // packet handlers, container mutation
+│       └── network/             // networking payload definitions
+└── neoforge/                  // Gradle module - NeoForge-specific, mirrors fabric/
+    └── com.easysort.platform.neoforge
+        ├── client/              // keybind, config, screen, widget, mixins
+        ├── server/              // packet handlers, container mutation
+        └── network/             // networking payload definitions
 ```
 
-**Hard rule:** `core/` must never import `net.minecraft.*` or `net.fabricmc.*`. This is
-what keeps the sorting algorithm unit-testable without a Minecraft runtime, and what
-makes a future NeoForge module addition a mechanical package move instead of a rewrite.
+**Hard rule:** `common/` must never import `net.minecraft.*` or `net.fabricmc.*`/
+`net.neoforged.*` outside of `platform.common` (which may use vanilla `net.minecraft.*`
+but never loader-specific classes). This is what keeps the sorting algorithm
+unit-testable without a Minecraft runtime, and what made NeoForge support a new
+sibling module instead of a rewrite - verified in practice twice: `core/` and
+`platform.common/` moved into `common/` unchanged when the multi-module split
+happened, and `neoforge/` was built entirely by re-implementing the thin platform
+glue against NeoForge's own APIs without touching a single line of `common/` or
+`fabric/`.
+
+`fabric/` and `neoforge/` are deliberately **not** unified via Architectury's
+cross-platform networking/event API - each was written directly against its own
+loader's APIs. This trades some duplication in the platform-glue layer (network
+payload registration, the button-injection mixin, keybind registration) for zero
+regression risk to the already-shipped Fabric code. All actual sorting/transfer
+logic lives in `common/` and is identical on both loaders regardless.
 
 ## Client/server separation
 
@@ -52,26 +74,41 @@ class of desync/dupe bugs this design avoids.
 
 ## Networking
 
-Fabric API's `Payload`/`PacketCodec` pattern. Payloads carry a container reference
-and a sort preset id — never a full inventory snapshot.
+Both platforms use the same vanilla `CustomPacketPayload`/`StreamCodec` types for
+the wire format (payloads carry a container reference and a sort preset id, never
+a full inventory snapshot), but register them through each loader's own API:
+Fabric via `PayloadTypeRegistry`/`ServerPlayNetworking`, NeoForge via
+`RegisterPayloadHandlersEvent`/`PayloadRegistrar` (which runs handlers on the main
+thread by default - no manual `context.server().execute()` needed there, unlike
+Fabric's handler).
 
 ## Events, registries, mixins
 
-Prefer Fabric API hooks (`ScreenEvents`, `ScreenHandlerEvents`, tick events) over
-mixins wherever an official hook exists. Mixins are reserved for cases with no
-clean hook and live under `platform/fabric/mixin` for easy audit on each Minecraft
-version port.
+Prefer each loader's own event hooks over mixins wherever a clean one exists
+(Fabric's `ScreenEvents`/tick events; NeoForge's `ScreenEvent`/`ClientTickEvent`
+on `NeoForge.EVENT_BUS`, plus `RegisterKeyMappingsEvent` for keybinds). Mixins are
+reserved for cases with no clean hook - adding a widget to an existing vanilla
+screen, on both loaders - and live under `platform/fabric/mixin` and
+`platform/neoforge/mixin` respectively for easy audit on each Minecraft version
+port. Mixin itself works identically on both loaders via Architectury Loom; the
+two platforms' mixin classes differ only in how they re-check the inventory
+button's per-frame visibility (Fabric: `ScreenEvents.beforeRender`, scoped
+per-screen-instance by Fabric API; NeoForge: a second `@Inject` into
+`AbstractContainerScreen.render()` HEAD, since `AbstractWidget.render()` is
+`final` and NeoForge's screen render event is a global bus listener that would
+otherwise leak one registration per screen opened).
 
 ## Testing
 
 - Unit tests (JUnit 5) cover all of `core/` with zero Minecraft dependency —
-  fast, run on every CI build.
+  fast, run on every CI build. Identical on both platforms since `core/` is shared.
 - GameTest (`fabric-gametest-api-v1`, `gametest` source set) covers
   `ContainerAdapter`/`MenuContainers` against real block entities, players,
   and item registries - not just the hand-built `SortableItem` test doubles
-  the unit tests use. Runs automatically as part of `./gradlew build`/CI.
-  Does not cover the networking round-trip or button/mixin UI; those remain
-  manual QA. See [TESTING.md](TESTING.md).
+  the unit tests use. Runs automatically as part of `./gradlew build`/CI. This is
+  Fabric-only (NeoForge has its own, separate test framework) - not yet ported.
+  Does not cover the networking round-trip or button/mixin UI on either platform;
+  those remain manual QA. See [TESTING.md](TESTING.md).
 
 ## Versioning of this document
 

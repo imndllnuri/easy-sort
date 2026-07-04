@@ -24,7 +24,7 @@ run/
 
 # Logs
 *.log
-
+temp
 # Local environment overrides
 .env
 local.properties

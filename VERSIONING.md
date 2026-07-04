@@ -23,17 +23,29 @@ compatibility table.
 
 ## Git branching
 
-- `main` tracks the latest actively developed Minecraft version.
-- Older but still-supported Minecraft versions get a long-lived `mc/1.21.x`
-  branch for critical-fix backports only — no new features. Avoid maintaining
-  more than one such branch alongside `main` unless demand clearly justifies it.
+- `main` always tracks the single, latest actively developed Minecraft
+  version and gets all new features.
+- When bumping to a new Minecraft version, first cut a branch named
+  `mc/<old-version>.x` (e.g. `mc/1.21.x`) from `main`'s last commit at the old
+  version, *then* bump `main` to the new version. The branch is a frozen
+  snapshot of the whole multi-module repo at that version - `common/`,
+  `fabric/`, and `neoforge/` all travel together, so it always contains
+  whichever loaders were supported at the time it was cut.
+- `mc/*.x` branches only ever receive critical-fix backports, cherry-picked
+  from `main` after the fix lands there - never new features. Tag and release
+  from the branch itself (e.g. `v0.4.1-alpha` off `mc/1.21.x`), independent of
+  `main`'s version numbering.
+- Avoid maintaining more than one `mc/*.x` branch alongside `main` unless
+  demand clearly justifies it - each one is ongoing maintenance load, not a
+  one-time cost.
 
 ## Porting to new Minecraft versions
 
-Each Minecraft version bump is its own milestone: update mappings/loader/Fabric
-API versions in `gradle.properties`, run the full test suite (unit tests in
-`core/` should pass unchanged, by design — see [ARCHITECTURE.md](ARCHITECTURE.md)),
-then manually re-verify `platform/fabric` mixins and hooks, which are what
+Each Minecraft version bump is its own milestone: update mappings/loader/
+Fabric API/NeoForge versions in `gradle.properties`, run the full test suite
+(unit tests in `common/core` should pass unchanged, by design — see
+[ARCHITECTURE.md](ARCHITECTURE.md)), then manually re-verify both
+`platform/fabric` and `platform/neoforge`'s mixins and hooks, which are what
 typically break across versions.
 
 ## Config compatibility

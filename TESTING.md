@@ -30,9 +30,14 @@ Not covered by GameTest: the actual client→server networking round-trip and
 the button/mixin UI (creative-tab visibility, positioning). Those remain
 manual QA - see the checklist below.
 
+GameTest is Fabric-only (`fabric-gametest-api-v1`) and hasn't been ported to
+NeoForge, which has its own separate test framework - NeoForge relies entirely
+on the shared `core/` unit tests plus the manual QA checklist below.
+
 ## Manual QA checklist (pre-release)
 
-Run before every tagged release:
+Run before every tagged release, on every platform being released
+(Fabric and/or NeoForge):
 
 - [ ] Singleplayer: sort player inventory, verify stable/idempotent ordering
 - [ ] Singleplayer: sort a chest and a double chest

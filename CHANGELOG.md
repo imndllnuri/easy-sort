@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- NeoForge support (1.21.10): full feature parity with Fabric - Sort, Settings,
+  Restock, Quick Stack, the "I" inventory-sort button/hotkey, and shulker box
+  support all work identically. Built as a new `neoforge/` Gradle module via
+  Architectury Loom, implemented directly against NeoForge's own networking,
+  event, and keybind APIs. Manually verified in a dev client on both platforms.
+
+### Fixed
+
+- Inventory sort ("I" button/hotkey) no longer reorders the hotbar - only the
+  27 main storage slots get sorted now, on both Fabric and NeoForge. Reordering
+  the hotbar mid-use was jarring (e.g. your currently-held tool could jump to
+  a different slot).
+
 ## [0.3.1-alpha] - 2026-07-04
 
 ### Fixed
