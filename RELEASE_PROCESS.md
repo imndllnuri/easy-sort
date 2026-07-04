@@ -1,6 +1,8 @@
 # Release Process
 
-1. Ensure `main` is green: `./gradlew build` passes, tests pass.
+1. Ensure the release branch is green: `main` for the latest Minecraft
+   version, or the relevant `mc/*.x` branch for a backport release (see
+   [VERSIONING.md](VERSIONING.md)). `./gradlew build` passes, tests pass.
 2. Move the `[Unreleased]` section of `CHANGELOG.md` into a new dated version
    section, following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
    Avoid publishing a version with an empty/non-functional changelog entry
