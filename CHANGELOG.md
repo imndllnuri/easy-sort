@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0-alpha] - 2026-07-04
+
 ### Added
 
 - NeoForge support (1.21.10): full feature parity with Fabric - Sort, Settings,
   Restock, Quick Stack, the "I" inventory-sort button/hotkey, and shulker box
   support all work identically. Built as a new `neoforge/` Gradle module via
   Architectury Loom, implemented directly against NeoForge's own networking,
-  event, and keybind APIs. Manually verified in a dev client on both platforms.
+  event, and keybind APIs. Manually verified in-game on both platforms.
 
 ### Fixed
 
