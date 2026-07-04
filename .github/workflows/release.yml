@@ -30,14 +30,23 @@ jobs:
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
+      - name: Stage release artifacts with loader-unique names
+        # fabric/ and neoforge/ both produce identically-named jars
+        # (easy-sort-<version>.jar) - a GitHub Release requires unique asset
+        # filenames, so upload straight from both build/libs/ dirs would
+        # silently collide/overwrite instead of attaching both.
+        run: |
+          mkdir -p release-artifacts
+          V="${{ steps.version.outputs.value }}"
+          cp "fabric/build/libs/easy-sort-$V.jar" "release-artifacts/easy-sort-$V-fabric.jar"
+          cp "fabric/build/libs/easy-sort-$V-sources.jar" "release-artifacts/easy-sort-$V-fabric-sources.jar"
+          cp "neoforge/build/libs/easy-sort-$V.jar" "release-artifacts/easy-sort-$V-neoforge.jar"
+          cp "neoforge/build/libs/easy-sort-$V-sources.jar" "release-artifacts/easy-sort-$V-neoforge-sources.jar"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            fabric/build/libs/easy-sort-${{ steps.version.outputs.value }}.jar
-            fabric/build/libs/easy-sort-${{ steps.version.outputs.value }}-sources.jar
-            neoforge/build/libs/easy-sort-${{ steps.version.outputs.value }}.jar
-            neoforge/build/libs/easy-sort-${{ steps.version.outputs.value }}-sources.jar
+          files: release-artifacts/*.jar
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-alpha') || contains(github.ref_name, '-beta') }}
 
