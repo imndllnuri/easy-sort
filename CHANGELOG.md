@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the placeholder "ES" icon with a real one (chest + sparkle) on
+  both Fabric and NeoForge.
+
 ## [0.4.0-alpha] - 2026-07-04
 
 ### Added
