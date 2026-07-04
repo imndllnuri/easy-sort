@@ -30,8 +30,9 @@ what's shipped and what's next.
 | Minecraft | Loader | Status |
 |---|---|---|
 | 1.21.10 | Fabric | Alpha |
+| 1.21.10 | NeoForge | In development (not yet released) |
 
-NeoForge/Forge support is planned for a later release (see [ROADMAP.md](ROADMAP.md)).
+Forge support is not currently planned (see [ROADMAP.md](ROADMAP.md)).
 
 ## Installation
 
