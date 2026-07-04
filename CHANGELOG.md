@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.1-alpha] - 2026-07-04
+
+### Fixed
+
+- Corrected the "I" (inventory sort) button's vertical position on shulker
+  box screens - it was off by a pixel relative to chest-type containers due
+  to `ShulkerBoxScreen` adjusting `imageHeight` after the base class had
+  already computed the label position from it.
+
+### Changed
+
+- Shrunk the button row from 12x12 to 10x10 and reordered it to read
+  left-to-right as S, Q, R, G.
+
 ## [0.3.0-alpha] - 2026-07-03
 
 ### Added
