@@ -1,0 +1,14 @@
+{
+	"easy-sort.button.sort": "Sort this container",
+	"easy-sort.button.sort_inventory": "Sort your inventory",
+	"easy-sort.button.settings": "Sort settings",
+	"easy-sort.button.restock": "Restock from this container",
+	"easy-sort.button.quick_stack": "Quick Stack into this container",
+	"key.easy-sort.sort_inventory": "Sort Inventory",
+	"easy-sort.config.title": "Easy Sort Settings",
+	"easy-sort.config.sort_by": "Sort by: %s",
+	"easy-sort.sort_key.mod_id": "Mod",
+	"easy-sort.sort_key.item_id": "Item ID",
+	"easy-sort.sort_key.count": "Count",
+	"easy-sort.sort_key.display_name": "Name"
+}

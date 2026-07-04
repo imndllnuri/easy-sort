@@ -35,6 +35,9 @@ shadowJar {
 	exclude "architectury.common.json"
 	configurations = [project.configurations.shadowCommon]
 	archiveClassifier = "dev-shadow"
+	manifest {
+		attributes("MixinConfigs": "easy-sort.mixins.json")
+	}
 }
 
 remapJar {

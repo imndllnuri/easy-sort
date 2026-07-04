@@ -8,6 +8,7 @@ modId="easysort"
 version="${version}"
 displayName="Easy Sort"
 displayURL="https://github.com/imndllnuri/easy-sort"
+logoFile="icon.png"
 description='''
 A lightweight, vanilla-feel inventory and chest sorting mod.
 '''

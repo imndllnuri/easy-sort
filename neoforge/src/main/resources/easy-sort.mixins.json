@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.easysort.platform.neoforge.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"client.AbstractContainerScreenMixin",
+		"client.CreativeModeInventoryScreenAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
