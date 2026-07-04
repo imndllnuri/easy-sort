@@ -78,4 +78,29 @@ public class ContainerAdapterGameTests {
 
 		helper.succeed();
 	}
+
+	@GameTest
+	public void sortingPlayerInventoryNeverTouchesHotbar(GameTestHelper helper) {
+		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+
+		// Hotbar (slots 0-8) - deliberately unsorted, must stay untouched.
+		player.getInventory().setItem(0, new ItemStack(Items.STONE, 1));
+		player.getInventory().setItem(1, new ItemStack(Items.DIRT, 1));
+
+		// Main storage (slots 9-35) - out of order, should get sorted.
+		player.getInventory().setItem(15, new ItemStack(Items.STONE, 1));
+		player.getInventory().setItem(9, new ItemStack(Items.DIRT, 1));
+
+		ContainerAdapter.sort(player.getInventory(), Inventory.SELECTION_SIZE, Inventory.INVENTORY_SIZE,
+				SortConfig.defaultConfig());
+
+		helper.assertTrue(player.getInventory().getItem(0).is(Items.STONE),
+				Component.literal("hotbar slot 0 must be untouched by an inventory sort"));
+		helper.assertTrue(player.getInventory().getItem(1).is(Items.DIRT),
+				Component.literal("hotbar slot 1 must be untouched by an inventory sort"));
+		helper.assertTrue(player.getInventory().getItem(9).is(Items.DIRT),
+				Component.literal("expected dirt sorted first in the main storage grid"));
+
+		helper.succeed();
+	}
 }

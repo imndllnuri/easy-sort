@@ -18,10 +18,10 @@ public final class SortPlayerInventoryServerHandler {
 	}
 
 	private static void handle(SortPlayerInventoryPayload payload, ServerPlayer player) {
-		// Inventory.getContainerSize() includes armor/offhand past index
-		// INVENTORY_SIZE - bound the sort to the main 36 hotbar+storage slots
-		// only, or equipped gear would get scrambled into the grid.
-		ContainerAdapter.sort(player.getInventory(), 0, Inventory.INVENTORY_SIZE,
+		// Sorts only the 27 main storage slots - never the hotbar (reordering
+		// it mid-use would be jarring/dangerous, e.g. moving your held tool)
+		// and never armor/offhand, which sit past index INVENTORY_SIZE.
+		ContainerAdapter.sort(player.getInventory(), Inventory.SELECTION_SIZE, Inventory.INVENTORY_SIZE,
 				SortConfig.withPrimary(payload.primarySortKey()));
 		player.containerMenu.broadcastFullState();
 	}

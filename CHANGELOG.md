@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   event, and keybind APIs (not yet released or published; still pending manual
   QA and merge to `main`).
 
+### Fixed
+
+- Inventory sort ("I" button/hotkey) no longer reorders the hotbar - only the
+  27 main storage slots get sorted now, on both Fabric and NeoForge. Reordering
+  the hotbar mid-use was jarring (e.g. your currently-held tool could jump to
+  a different slot).
+
 ## [0.3.0-alpha] - 2026-07-03
 
 ### Added
