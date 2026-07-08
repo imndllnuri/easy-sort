@@ -37,8 +37,8 @@ Forge support is not currently planned (see [ROADMAP.md](ROADMAP.md)).
 
 ## Installation
 
-Published on [Modrinth](https://modrinth.com/mod/easy-sort) and CurseForge
-(project ID `1596721`). See
+Published on [Modrinth](https://modrinth.com/mod/easy-sort) and
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/easy-sort). See
 [GitHub Releases](https://github.com/imndllnuri/easy-sort/releases) for
 built jars directly.
 
