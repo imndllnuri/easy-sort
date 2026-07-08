@@ -1,6 +1,7 @@
 # Easy Sort
 
-A lightweight, vanilla-feel inventory and chest sorting mod for Minecraft.
+A lightweight, vanilla-feel inventory and chest sorting mod for Minecraft,
+for both Fabric and NeoForge.
 
 One hotkey sorts a container using a stable, configurable ordering and merges
 partial stacks — no inventory-management suite bloat, no forced GUI overhaul.
@@ -21,29 +22,30 @@ partial stacks — no inventory-management suite bloat, no forced GUI overhaul.
 
 ## Status
 
-Post-MVP, in active development (`0.3.0-alpha`). MVP (chest + player
-inventory sorting, config) is complete; see [ROADMAP.md](ROADMAP.md) for
-what's shipped and what's next.
+Stable (`1.0.0`). MVP and all post-MVP-so-far features (Restock, Quick
+Stack, shulker boxes) are complete on both Fabric and NeoForge; see
+[ROADMAP.md](ROADMAP.md) for what's shipped and what's next.
 
 ## Supported versions
 
 | Minecraft | Loader | Status |
 |---|---|---|
-| 1.21.10 | Fabric | Alpha |
-| 1.21.10 | NeoForge | In development (not yet released) |
+| 1.21.10 | Fabric | Release |
+| 1.21.10 | NeoForge | Release |
 
 Forge support is not currently planned (see [ROADMAP.md](ROADMAP.md)).
 
 ## Installation
 
-Published on [Modrinth](https://modrinth.com/mod/tNAlPFb9) and CurseForge
-(project ID `1596721`; link TODO once its slug is confirmed - both listings
-are pending initial platform review as of this writing anyway). See
+Published on [Modrinth](https://modrinth.com/mod/easy-sort) and CurseForge
+(project ID `1596721`). See
 [GitHub Releases](https://github.com/imndllnuri/easy-sort/releases) for
-built jars in the meantime.
+built jars directly.
 
 Requires [Fabric Loader](https://fabricmc.net/) and
-[Fabric API](https://modrinth.com/mod/fabric-api).
+[Fabric API](https://modrinth.com/mod/fabric-api) on Fabric; just
+[NeoForge](https://neoforged.net/) itself on NeoForge, no extra API mod
+needed.
 
 ## Contributing
 
