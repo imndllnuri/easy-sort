@@ -33,3 +33,7 @@ local.properties
 PUBLISHING_CHECKLIST.md
 edit-project.md
 description.md
+
+# Modrinth/CurseForge gallery upload staging (not project source)
+media/gallery/*
+!media/gallery/.gitkeep
