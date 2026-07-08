@@ -53,9 +53,9 @@
 | M2 | Chest-type container sorting (sort button, no hotkey yet) | Done |
 | M3 | Player inventory sorting (hotkey + button) | Done |
 | M4 | Config screen + persisted config (wires up the Settings/"G" placeholder) | Done |
-| M5 | v1.0 public release (Modrinth + CurseForge) | Alpha released (`v0.1.1-alpha`); v1.0 pending remaining post-MVP items |
+| M5 | v1.0 public release (Modrinth + CurseForge) | Done (`v1.0.0`) |
 | M6+ | Post-MVP features | In progress - Restock/Quick Stack/Shulker boxes done, Bundles next |
-| — | NeoForge support (module split + full feature port, see [ARCHITECTURE.md](ARCHITECTURE.md)) | Feature-complete on `feature/neoforge-support`; pending manual QA and merge/release |
+| — | NeoForge support (module split + full feature port, see [ARCHITECTURE.md](ARCHITECTURE.md)) | Done - merged, manually QA'd, released alongside Fabric since `v0.4.0-alpha` |
 | v2 | Extensibility | Not started |
 
 **Done, not previously tracked here:**
@@ -68,8 +68,8 @@
 **Also done, not previously tracked here:**
 - Release automation (`.github/workflows/release.yml`): tag push builds the
   jar, creates a GitHub Release, and publishes to Modrinth + CurseForge.
-  Confirmed working end to end on `v0.1.1-alpha`. Real project icon is still
-  a placeholder - see `PUBLISHING_CHECKLIST.md`.
+  Confirmed working end to end on `v0.1.1-alpha`. Real project icon (Sparkle
+  Chest) shipped in `v0.4.1-beta`, replacing the placeholder.
 
 Full rationale and trade-offs behind this roadmap live in the original project
 planning doc; this file is the living, updated summary.

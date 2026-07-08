@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-08
+
+First stable release. No functional changes from 0.4.1-beta - every MVP and
+post-MVP-so-far feature (sort, player inventory sort, Restock, Quick Stack,
+shulker boxes, settings screen) is complete and working on both Fabric and
+NeoForge. This release marks that milestone: Easy Sort is no longer alpha/
+beta, it's a stable tool safe to depend on. Bundles, locked/ignored slots,
+favorites, and auto-sort remain planned as post-1.0 minor releases (see
+[ROADMAP.md](ROADMAP.md)).
+
 ## [0.4.1-beta] - 2026-07-04
 
 First beta: MVP + all planned post-MVP features (Restock, Quick Stack,
