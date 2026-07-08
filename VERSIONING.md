@@ -39,6 +39,12 @@ compatibility table.
   demand clearly justifies it - each one is ongoing maintenance load, not a
   one-time cost.
 
+Run `scripts/check-mc-update.py` any time to check whether the toolchain
+(Fabric API, NeoForge, Parchment, Architectury Loom) supports building
+against a newer Minecraft version than the one in `gradle.properties` -
+it checks the live upstream sources instead of needing a manual re-check
+each time.
+
 ## Porting to new Minecraft versions
 
 Each Minecraft version bump is its own milestone: update mappings/loader/
