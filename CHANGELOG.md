@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-07-10
+
+### Fixed
+
+- **Critical (Fabric):** the published jar was missing every class from the
+  Fabric `client` source set - the client entrypoint, config screen, button
+  widget, and both mixins (`AbstractContainerScreenMixin`,
+  `CreativeModeInventoryScreenAccessor`) never made it into the shipped jar.
+  Mixin's config-prepare pass failed on startup as soon as any class was
+  transformed (visible as an `InvalidMixinException` crash, often blamed on
+  whatever other mod happened to trigger the first mixin transform, e.g.
+  Axiom's `preLaunch`), and even without that crash, none of the client-side
+  UI ever actually shipped. Root cause: `fabric/build.gradle`'s `shadowJar`
+  task only packaged `sourceSets.main.output`, never
+  `sourceSets.client.output`. Fixed by adding `from sourceSets.client.output`
+  to `shadowJar`. Affected every Fabric release since the `common`/`fabric`
+  module split (`0.4.0-alpha` onward); NeoForge was never affected (it
+  doesn't use split source sets).
+
 ## [1.0.0] - 2026-07-08
 
 First stable release. No functional changes from 0.4.1-beta - every MVP and
