@@ -20,6 +20,7 @@ public final class MiniButton extends AbstractButton {
 	private static final int COLOR_BACKGROUND_HOVERED = 0xFFA0A0A0;
 	private static final int COLOR_TEXT = 0xFFFFFFFF;
 	private static final int COLOR_TEXT_DISABLED = 0xFF707070;
+	private static final float TEXT_SCALE = 0.75f;
 
 	private final Runnable onPress;
 
@@ -41,7 +42,13 @@ public final class MiniButton extends AbstractButton {
 
 		Font font = Minecraft.getInstance().font;
 		int textColor = this.active ? COLOR_TEXT : COLOR_TEXT_DISABLED;
-		graphics.drawCenteredString(font, getMessage(), getX() + getWidth() / 2, getY() + (getHeight() - 8) / 2, textColor);
+		int textWidth = font.width(getMessage());
+
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
+		graphics.pose().scale(TEXT_SCALE, TEXT_SCALE);
+		graphics.drawString(font, getMessage(), -textWidth / 2, -4, textColor);
+		graphics.pose().popMatrix();
 	}
 
 	@Override

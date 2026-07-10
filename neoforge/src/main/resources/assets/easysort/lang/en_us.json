@@ -5,6 +5,8 @@
 	"easy-sort.button.restock": "Restock from this container",
 	"easy-sort.button.quick_stack": "Quick Stack into this container",
 	"key.easy-sort.sort_inventory": "Sort Inventory",
+	"key.easy-sort.sort_container": "Sort Container",
+	"key.category.easysort.easy_sort": "Easy Sort",
 	"easy-sort.config.title": "Easy Sort Settings",
 	"easy-sort.config.sort_by": "Sort by: %s",
 	"easy-sort.sort_key.mod_id": "Mod",

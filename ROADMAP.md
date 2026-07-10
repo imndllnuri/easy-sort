@@ -7,8 +7,10 @@
       never equipped armor/offhand)
 - [x] Chest sorting, including double chests (button only - also works on
       barrels and ender chests for free, since they share vanilla's `ChestMenu`)
-- [x] Configurable hotkey (default `R`, rebindable in vanilla's Controls
-      menu under Inventory - only fires while a container screen is open)
+- [x] Configurable hotkeys - "Sort Inventory" (default `R`) and "Sort
+      Container" (unbound by default), both rebindable under their own
+      "Easy Sort" category in vanilla's Controls menu, each only firing
+      while the relevant screen is open
 - [x] Partial-stack merging
 - [x] Stable, deterministic sort algorithm
 - [x] Configurable sort order (config screen + file) - a "Sort by" preference

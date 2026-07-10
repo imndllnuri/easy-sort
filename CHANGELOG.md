@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-10
+
+### Added
+
+- A dedicated "Easy Sort" category in the vanilla Controls > Key Binds
+  screen, and a new, separately configurable "Sort Container" keybind
+  (unbound by default - "S" is movement, so there's no safe default). The
+  existing "Sort Inventory" keybind (default `R`) now lives in the same
+  category instead of being lumped into vanilla's "Inventory" section.
+
+### Fixed
+
+- **Both platforms:** the sort keybinds never actually fired while a
+  container or inventory screen was open - the one situation they're meant
+  to work in. Root cause: vanilla only calls `KeyMapping.click()` (which
+  backs `KeyMapping.consumeClick()`) when `Minecraft.screen == null`; it's
+  never called while any screen is displayed, so the previous per-tick
+  `consumeClick()` poll could never detect the keypress. Fixed by hooking the
+  per-screen keyboard event directly instead: Fabric's
+  `ScreenKeyboardEvents.afterKeyPress`, NeoForge's
+  `ScreenEvent.KeyPressed.Post`. Both keybinds keep their existing scoping -
+  Sort Inventory on any container screen, Sort Container only on a supported
+  one (chest, shulker box).
+
+### Changed
+
+- The `S`/`Q`/`R`/`G`/`I` in-screen button glyphs now render at 0.75x scale
+  instead of full font size, reading less cramped inside the 10px buttons.
+
 ## [1.0.1] - 2026-07-10
 
 ### Fixed
