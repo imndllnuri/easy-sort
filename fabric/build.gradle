@@ -55,6 +55,7 @@ processResources {
 
 shadowJar {
 	exclude "architectury.common.json"
+	from sourceSets.client.output
 	configurations = [project.configurations.shadowCommon]
 	archiveClassifier = "dev-shadow"
 }
