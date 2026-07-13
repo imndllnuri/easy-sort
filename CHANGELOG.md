@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-13
+
+### Changed
+
+- Ported to Minecraft 1.21.11 (Fabric API `0.141.4+1.21.11`, NeoForge
+  `21.11.42`, Parchment `2025.12.20`, Architectury API `19.0.1`). No user-
+  facing behavior changes - this release only exists to track the new
+  Minecraft version. `main` no longer builds against 1.21.10; that line is
+  frozen on the `mc/1.21.x` branch (last released as `v1.1.0`).
+
+### Fixed (internal, source-only)
+
+- `net.minecraft.resources.ResourceLocation` was renamed to
+  `net.minecraft.resources.Identifier` in 1.21.11 - updated every reference
+  on both platforms (network payload channel IDs, the "Easy Sort" keybind
+  category, the mod ID lookups).
+- `AbstractButton.renderWidget(...)` became `final` in 1.21.11; the abstract
+  method to implement is now `renderContents(...)` (identical signature).
+  Renamed the override in `MiniButton` on both platforms - no behavior
+  change, this is the same rename vanilla made internally.
+
 ## [1.1.0] - 2026-07-10
 
 ### Added

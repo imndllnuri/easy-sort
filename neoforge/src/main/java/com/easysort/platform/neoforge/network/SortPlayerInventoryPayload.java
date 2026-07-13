@@ -5,7 +5,7 @@ import com.easysort.platform.neoforge.EasySortNeoForge;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public record SortPlayerInventoryPayload(SortKey primarySortKey) implements CustomPacketPayload {
 
 	public static final Type<SortPlayerInventoryPayload> TYPE =
-			new Type<>(ResourceLocation.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "sort_player_inventory"));
+			new Type<>(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "sort_player_inventory"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, SortPlayerInventoryPayload> CODEC = StreamCodec.composite(
 			SortKeyCodec.CODEC, SortPlayerInventoryPayload::primarySortKey,

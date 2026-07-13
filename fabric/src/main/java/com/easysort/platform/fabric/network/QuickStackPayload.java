@@ -6,13 +6,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /** "Move matching items from my inventory into this open container." */
 public record QuickStackPayload(int containerId) implements CustomPacketPayload {
 
 	public static final Type<QuickStackPayload> TYPE =
-			new Type<>(ResourceLocation.fromNamespaceAndPath(EasySort.MOD_ID, "quick_stack"));
+			new Type<>(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "quick_stack"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, QuickStackPayload> CODEC =
 			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, QuickStackPayload::containerId, QuickStackPayload::new);

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public final class EasySortNeoForge {
 
 	// NeoForge's modid validation rejects hyphens (unlike Fabric, which
-	// allows them - confirmed earlier against Fabric's own ResourceLocation
+	// allows them - confirmed earlier against Fabric's own Identifier
 	// validator). "easysort" here only affects NeoForge's internal loader
 	// identifier; branding/display name/resource namespaces elsewhere are
 	// unaffected.

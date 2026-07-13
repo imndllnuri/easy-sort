@@ -12,13 +12,13 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class EasySortClient implements ClientModInitializer {
 
 	private static final KeyMapping.Category CATEGORY =
-			KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(EasySort.MOD_ID, "easy_sort"));
+			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "easy_sort"));
 
 	private static final KeyMapping SORT_INVENTORY_KEY = KeyBindingHelper.registerKeyBinding(
 			new KeyMapping("key.easy-sort.sort_inventory", GLFW.GLFW_KEY_R, CATEGORY));

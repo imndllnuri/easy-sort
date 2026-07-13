@@ -5,7 +5,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -13,7 +13,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public record QuickStackPayload(int containerId) implements CustomPacketPayload {
 
 	public static final Type<QuickStackPayload> TYPE =
-			new Type<>(ResourceLocation.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "quick_stack"));
+			new Type<>(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "quick_stack"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, QuickStackPayload> CODEC =
 			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, QuickStackPayload::containerId, QuickStackPayload::new);

@@ -7,7 +7,7 @@ import com.easysort.platform.neoforge.network.SortContainerPayload;
 import com.easysort.platform.neoforge.network.SortPlayerInventoryPayload;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -23,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 public final class EasySortNeoForgeClient {
 
 	private static final KeyMapping.Category CATEGORY =
-			KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "easy_sort"));
+			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "easy_sort"));
 
 	private static KeyMapping sortInventoryKey;
 	private static KeyMapping sortContainerKey;
