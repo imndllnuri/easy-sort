@@ -24,7 +24,7 @@ public record SortPlayerInventoryPayload(SortKey primarySortKey) implements Cust
 			SortPlayerInventoryPayload::new);
 
 	public static void register() {
-		PayloadTypeRegistry.playC2S().register(TYPE, CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
 	}
 
 	@Override

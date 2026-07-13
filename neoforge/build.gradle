@@ -1,71 +1,29 @@
 plugins {
-	id "com.gradleup.shadow" version "${shadow_plugin_version}"
+	id 'multiloader-loader'
+	id 'net.neoforged.moddev'
 }
 
-architectury {
-	platformSetupLoomIde()
-	neoForge()
-}
+neoForge {
+	version = neoforge_version
 
-configurations {
-	common
-	shadowCommon
-	compileClasspath.extendsFrom common
-	runtimeClasspath.extendsFrom common
-	developmentNeoForge.extendsFrom common
-}
-
-dependencies {
-	neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
-	modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
-
-	common(project(path: ":common", configuration: "namedElements")) { transitive false }
-	shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("META-INF/neoforge.mods.toml") {
-		expand "version": project.version
+	runs {
+		configureEach {
+			systemProperty 'neoforge.enabledGameTestNamespaces', 'easysort'
+		}
+		client {
+			client()
+			gameDirectory = this.mkdir(this.file('runs/client'))
+		}
+		server {
+			server()
+			this.file('runs/server').createParentDirectories()
+			gameDirectory = this.mkdir(this.file('runs/server'))
+		}
 	}
-}
 
-shadowJar {
-	exclude "architectury.common.json"
-	configurations = [project.configurations.shadowCommon]
-	archiveClassifier = "dev-shadow"
-}
-
-remapJar {
-	input.set shadowJar.archiveFile
-	dependsOn shadowJar
-	archiveClassifier = null
-}
-
-sourcesJar {
-	def commonSources = project(":common").sourcesJar
-	dependsOn commonSources
-	from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-		skip()
-	}
-}
-
-jar {
-	from("${rootDir}/LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}" }
-	}
-}
-
-publishing {
-	publications {
-		mavenNeoForge(MavenPublication) {
-			artifactId = rootProject.archives_base_name + "-neoforge"
-			from components.java
+	mods {
+		"easysort" {
+			sourceSet sourceSets.main
 		}
 	}
 }

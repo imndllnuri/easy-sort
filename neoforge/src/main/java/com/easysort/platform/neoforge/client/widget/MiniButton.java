@@ -2,7 +2,7 @@ package com.easysort.platform.neoforge.client.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
@@ -35,7 +35,7 @@ public final class MiniButton extends AbstractButton {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int background = this.active && this.isHovered() ? COLOR_BACKGROUND_HOVERED : COLOR_BACKGROUND;
 		graphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), COLOR_BORDER);
 		graphics.fill(getX() + 1, getY() + 1, getX() + getWidth() - 1, getY() + getHeight() - 1, background);
@@ -47,7 +47,7 @@ public final class MiniButton extends AbstractButton {
 		graphics.pose().pushMatrix();
 		graphics.pose().translate(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
 		graphics.pose().scale(TEXT_SCALE, TEXT_SCALE);
-		graphics.drawString(font, getMessage(), -textWidth / 2, -4, textColor);
+		graphics.text(font, getMessage(), -textWidth / 2, -4, textColor);
 		graphics.pose().popMatrix();
 	}
 

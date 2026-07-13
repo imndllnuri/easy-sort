@@ -83,7 +83,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// so only the one "Inventory" tab that shows real player items should
 		// keep this button visible - re-checked every frame since tab changes
 		// don't fire any event we can hook once.
-		ScreenEvents.beforeRender((Screen) (Object) this).register((screen, graphics, mouseX, mouseY, tickDelta) ->
+		ScreenEvents.beforeExtract((Screen) (Object) this).register((screen, graphics, mouseX, mouseY, tickDelta) ->
 				inventoryButton.visible = !(screen instanceof CreativeModeInventoryScreen)
 						|| CreativeModeInventoryScreenAccessor.easysort$getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY);
 

@@ -1,0 +1,36 @@
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+}
+
+base {
+	archivesName = archives_base_name
+}
+
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(java_version.toInteger())
+	withSourcesJar()
+}
+
+tasks.withType(Jar).configureEach {
+	from(rootProject.file('LICENSE')) {
+		rename { "${it}_${archives_base_name}" }
+	}
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching(['META-INF/neoforge.mods.toml', 'fabric.mod.json']) {
+		expand "version": project.version
+	}
+}
+
+publishing {
+	publications {
+		register('mavenJava', MavenPublication) {
+			artifactId base.archivesName.get()
+			from components.java
+		}
+	}
+}

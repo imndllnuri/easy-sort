@@ -1,60 +1,11 @@
 plugins {
-	id "architectury-plugin" version "${architectury_plugin_version}"
-	id "dev.architectury.loom" version "${architectury_loom_version}" apply false
-}
-
-architectury {
-	minecraft = rootProject.minecraft_version
-}
-
-subprojects {
-	apply plugin: "dev.architectury.loom"
-
-	loom {
-		silentMojangMappingsLicense()
-	}
-
-	repositories {
-		maven {
-			name = "ParchmentMC"
-			url = "https://maven.parchmentmc.org"
-		}
-		maven {
-			name = "NeoForged"
-			url = "https://maven.neoforged.net/releases/"
-		}
-	}
-
-	dependencies {
-		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-		mappings loom.layered() {
-			officialMojangMappings()
-			parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
-		}
-	}
+	// see https://fabricmc.net/develop/ for new versions
+	id "net.fabricmc.fabric-loom" version "${fabric_loom_version}" apply false
+	// see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+	id "net.neoforged.moddev" version "${moddev_version}" apply false
 }
 
 allprojects {
-	apply plugin: "java"
-	apply plugin: "architectury-plugin"
-	apply plugin: "maven-publish"
-
-	base {
-		archivesName = rootProject.archives_base_name
-	}
-
-	version = rootProject.mod_version
-	group = rootProject.maven_group
-
-	java {
-		toolchain {
-			languageVersion = JavaLanguageVersion.of(21)
-		}
-		withSourcesJar()
-	}
-
-	tasks.withType(JavaCompile).configureEach {
-		it.options.encoding = "UTF-8"
-		it.options.release = 21
-	}
+	version = mod_version
+	group = maven_group
 }

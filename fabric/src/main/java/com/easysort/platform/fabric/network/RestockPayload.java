@@ -18,7 +18,7 @@ public record RestockPayload(int containerId) implements CustomPacketPayload {
 			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, RestockPayload::containerId, RestockPayload::new);
 
 	public static void register() {
-		PayloadTypeRegistry.playC2S().register(TYPE, CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
 	}
 
 	@Override

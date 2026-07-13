@@ -6,7 +6,7 @@ import com.easysort.platform.fabric.client.config.EasySortClientConfig;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
@@ -20,12 +20,12 @@ public final class EasySortClient implements ClientModInitializer {
 	private static final KeyMapping.Category CATEGORY =
 			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "easy_sort"));
 
-	private static final KeyMapping SORT_INVENTORY_KEY = KeyBindingHelper.registerKeyBinding(
+	private static final KeyMapping SORT_INVENTORY_KEY = KeyMappingHelper.registerKeyMapping(
 			new KeyMapping("key.easy-sort.sort_inventory", GLFW.GLFW_KEY_R, CATEGORY));
 
 	// Unbound by default - "S" is movement, and there's no other obviously
 	// safe default key for "sort the container I'm looking at".
-	private static final KeyMapping SORT_CONTAINER_KEY = KeyBindingHelper.registerKeyBinding(
+	private static final KeyMapping SORT_CONTAINER_KEY = KeyMappingHelper.registerKeyMapping(
 			new KeyMapping("key.easy-sort.sort_container", GLFW.GLFW_KEY_UNKNOWN, CATEGORY));
 
 	@Override
