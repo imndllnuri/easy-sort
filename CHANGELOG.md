@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-07-13
+
+### Fixed
+
+- **Fabric:** the shipped jar's `fabric.mod.json` only declared compatibility
+  with `26.1.2` and later (`~26.1.2`), even though Fabric API itself
+  publishes identical builds across `26.1`, `26.1.1`, and `26.1.2` - a user
+  on `26.1`/`26.1.1` would have Fabric Loader refuse to load the mod outright.
+  Widened to `26.1.x` (any patch of the 26.1 line). NeoForge stays pinned to
+  exactly `26.1.2` - NeoForge's own builds for `26.1`/`26.1.1` never left
+  beta, so those aren't genuinely supported targets regardless of what this
+  mod declares.
+
 ## [1.3.0] - 2026-07-13
 
 ### Changed

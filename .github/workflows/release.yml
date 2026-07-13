@@ -85,7 +85,13 @@ jobs:
           version-type: ${{ steps.channel.outputs.value }}
           changelog-file: CHANGELOG.md
           loaders: fabric
-          game-versions: ${{ steps.mc_version.outputs.value }}
+          # Fabric API publishes identical builds across every patch of a
+          # drop, so this mirrors fabric.mod.json's own "26.1.x"-style
+          # X-range instead of pinning to the single build/test version
+          # like NeoForge below - keep this in sync with fabric.mod.json's
+          # "minecraft" depends entry by hand if that range ever changes.
+          game-versions: |
+            >=26.1 <26.2
           # Fabric API dependency isn't declared here yet - set it manually on
           # each platform's project settings page for now, or add it here
           # later once the exact `id@version(type)` syntax is confirmed.
