@@ -22,7 +22,7 @@ partial stacks — no inventory-management suite bloat, no forced GUI overhaul.
 
 ## Status
 
-Stable (`1.2.0`). MVP and all post-MVP-so-far features (Restock, Quick
+Stable (`1.3.0`). MVP and all post-MVP-so-far features (Restock, Quick
 Stack, shulker boxes) are complete on both Fabric and NeoForge; see
 [ROADMAP.md](ROADMAP.md) for what's shipped and what's next.
 
@@ -30,8 +30,10 @@ Stack, shulker boxes) are complete on both Fabric and NeoForge; see
 
 | Minecraft | Loader | Status |
 |---|---|---|
-| 1.21.11 | Fabric | Release |
-| 1.21.11 | NeoForge | Release |
+| 26.1.2 | Fabric | Release |
+| 26.1.2 | NeoForge | Release |
+| 1.21.11 | Fabric | Frozen on [`mc/1.21.11`](https://github.com/imndllnuri/easy-sort/tree/mc/1.21.11) (last release: `v1.2.0`) |
+| 1.21.11 | NeoForge | Frozen on [`mc/1.21.11`](https://github.com/imndllnuri/easy-sort/tree/mc/1.21.11) (last release: `v1.2.0`) |
 | 1.21.10 | Fabric | Frozen on [`mc/1.21.x`](https://github.com/imndllnuri/easy-sort/tree/mc/1.21.x) (last release: `v1.1.0`) |
 | 1.21.10 | NeoForge | Frozen on [`mc/1.21.x`](https://github.com/imndllnuri/easy-sort/tree/mc/1.21.x) (last release: `v1.1.0`) |
 
@@ -47,7 +49,7 @@ built jars directly.
 Requires [Fabric Loader](https://fabricmc.net/) and
 [Fabric API](https://modrinth.com/mod/fabric-api) on Fabric; just
 [NeoForge](https://neoforged.net/) itself on NeoForge, no extra API mod
-needed.
+needed. Minecraft 26.1 requires Java 25 - this follows the same requirement.
 
 ## Contributing
 

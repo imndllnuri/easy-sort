@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-13
+
+### Changed
+
+- Ported to Minecraft 26.1.2, Mojang's first fully unobfuscated release under
+  the new year-based versioning scheme. Requires Java 25 at runtime (up from
+  21) - Mojang bumped this for 26.1 itself. No user-facing behavior changes.
+- Dropped Architectury Loom in favor of talking to each platform's own
+  official tooling directly: `net.fabricmc.fabric-loom` for Fabric,
+  `net.neoforged.moddev` (ModDevGradle) for NeoForge. Minecraft ships
+  unobfuscated from 26.1 onward, so Mojang/Parchment mappings no longer
+  exist at all - Architectury (a third-party wrapper) hadn't shipped support
+  for the new build model at the time of this release, but Fabric and
+  NeoForge's own tooling already had. `common/` never used Architectury's
+  runtime API, so this was a toolchain swap, not a rewrite: a `build-logic`
+  composite build now provides shared Gradle conventions, and `common/`
+  exposes its source directly to `fabric/`/`neoforge/` instead of a
+  compiled jar dependency.
+- 1.21.11 (the previous target) is frozen on the `mc/1.21.11` branch; `main`
+  no longer builds against it.
+
+### Fixed (internal, source-only)
+
+- Ported every real API break the 26.1.2 upgrade surfaced, confirmed via
+  `javap`/decompiled sources against the actual jars rather than guessed:
+  Fabric API renames (`PayloadTypeRegistry.playC2S()` ->
+  `serverboundPlay()`, `KeyBindingHelper` -> `KeyMappingHelper`,
+  `ScreenEvents.beforeRender()` -> `beforeExtract()`), and a genuine
+  rendering-pipeline rewrite (`GuiGraphics` -> `GuiGraphicsExtractor`,
+  `AbstractButton.renderContents()` -> `extractContents()`,
+  `Screen.render()` -> `extractRenderState()`; `fill()`/`pose()` unchanged).
+  Mixin `compatibilityLevel` bumped `JAVA_21` -> `JAVA_25`.
+
 ## [1.2.0] - 2026-07-13
 
 ### Changed
