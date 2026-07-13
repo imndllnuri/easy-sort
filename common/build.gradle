@@ -1,13 +1,19 @@
-architectury {
-	common(rootProject.enabled_platforms.split(","))
+plugins {
+	id 'multiloader-common'
+	id 'net.neoforged.moddev'
+}
+
+neoForge {
+	// No mods{}/runs{} block on purpose - this module never runs as a mod by
+	// itself. NeoForge's own decompiled/joined Minecraft artifact is applied
+	// here purely so common/ has real vanilla classes (AbstractContainerMenu,
+	// ChestMenu, ShulkerBoxMenu, ...) to compile against. Minecraft ships
+	// unobfuscated from 26.1 onward, so there's no mappings config at all -
+	// the classes here already have their real names.
+	neoFormVersion = neo_form_version
 }
 
 dependencies {
-	// Only for the Fabric @Environment annotations and Mixin dependencies -
-	// do not use any other classes from fabric-loader in common code.
-	modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
-	modApi "dev.architectury:architectury:${rootProject.architectury_api_version}"
-
 	testImplementation platform("org.junit:junit-bom:5.11.0")
 	testImplementation "org.junit.jupiter:junit-jupiter"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
@@ -17,11 +23,18 @@ test {
 	useJUnitPlatform()
 }
 
-publishing {
-	publications {
-		mavenCommon(MavenPublication) {
-			artifactId = rootProject.archives_base_name
-			from components.java
-		}
+configurations {
+	commonJava {
+		canBeResolved = false
+		canBeConsumed = true
 	}
+	commonResources {
+		canBeResolved = false
+		canBeConsumed = true
+	}
+}
+
+artifacts {
+	commonJava sourceSets.main.java.sourceDirectories.singleFile
+	commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }

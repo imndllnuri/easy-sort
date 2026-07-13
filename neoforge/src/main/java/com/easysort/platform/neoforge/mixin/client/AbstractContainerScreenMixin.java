@@ -8,7 +8,7 @@ import com.easysort.platform.neoforge.network.QuickStackPayload;
 import com.easysort.platform.neoforge.network.RestockPayload;
 import com.easysort.platform.neoforge.network.SortContainerPayload;
 import com.easysort.platform.neoforge.network.SortPlayerInventoryPayload;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -34,10 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * Mirrors the Fabric platform's AbstractContainerScreenMixin exactly in
  * intent; the "I" button's Creative-tab visibility is re-checked via a
- * second inject at render() HEAD (scoped to this screen instance, no global
- * listener/leak) instead of Fabric API's per-screen ScreenEvents.beforeRender,
- * since AbstractWidget.render() itself is final and can't be overridden to
- * self-recompute visibility.
+ * second inject at extractRenderState() HEAD (scoped to this screen instance,
+ * no global listener/leak) instead of Fabric API's per-screen
+ * ScreenEvents.beforeExtract, since AbstractWidget.extractRenderState()
+ * itself is final and can't be overridden to self-recompute visibility.
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
@@ -115,8 +115,8 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 	// so only the one "Inventory" tab that shows real player items should
 	// keep this button visible - re-checked every frame since tab changes
 	// don't fire any event we can hook once.
-	@Inject(method = "render", at = @At("HEAD"))
-	private void easysort$updateInventoryButtonVisibility(GuiGraphics graphics, int mouseX, int mouseY,
+	@Inject(method = "extractRenderState", at = @At("HEAD"))
+	private void easysort$updateInventoryButtonVisibility(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
 			float partialTick, CallbackInfo ci) {
 		easysort$inventoryButton.visible = !((Object) this instanceof CreativeModeInventoryScreen)
 				|| CreativeModeInventoryScreenAccessor.easysort$getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY;

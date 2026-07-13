@@ -18,7 +18,7 @@ public record QuickStackPayload(int containerId) implements CustomPacketPayload 
 			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, QuickStackPayload::containerId, QuickStackPayload::new);
 
 	public static void register() {
-		PayloadTypeRegistry.playC2S().register(TYPE, CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
 	}
 
 	@Override

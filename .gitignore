@@ -19,8 +19,9 @@ bin/
 .DS_Store
 Thumbs.db
 
-# Loom / Minecraft dev runs
+# Loom / ModDevGradle Minecraft dev runs
 run/
+runs/
 
 # Logs
 *.log

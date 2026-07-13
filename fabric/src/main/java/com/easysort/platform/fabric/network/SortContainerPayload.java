@@ -20,7 +20,7 @@ public record SortContainerPayload(int containerId, SortKey primarySortKey) impl
 			SortContainerPayload::new);
 
 	public static void register() {
-		PayloadTypeRegistry.playC2S().register(TYPE, CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
 	}
 
 	@Override
