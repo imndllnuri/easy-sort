@@ -30,15 +30,18 @@ jobs:
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Determine target Minecraft version from gradle.properties
+      - name: Determine NeoForge's target Minecraft version from gradle.properties
         # Was previously hardcoded per publish step below and silently went
         # stale across three MC version bumps (v1.0.1 through v1.2.0 all
         # published to Modrinth/CurseForge as "1.21.10" regardless of the
         # jar's actual target) - reading it from the single source of truth
-        # instead so it can't drift again.
+        # instead so it can't drift again. Fabric and NeoForge can target
+        # different Minecraft versions (see gradle.properties), so only
+        # NeoForge's publish step below reads this - Fabric's game-versions
+        # is set directly in its own publish step.
         id: mc_version
         run: |
-          value=$(grep -m1 '^minecraft_version=' gradle.properties | cut -d= -f2)
+          value=$(grep -m1 '^neoforge_minecraft_version=' gradle.properties | cut -d= -f2)
           echo "value=$value" >> "$GITHUB_OUTPUT"
 
       - name: Determine release channel from the tag
