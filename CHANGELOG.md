@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-13
+
+### Added
+
+- Fabric build now also targets Minecraft 26.2. Only one real API break
+  between 26.1.2 and 26.2 (much smaller jump than 1.21.11 -> 26.1.2):
+  `Minecraft.setScreen(Screen)` was renamed to `setScreenAndShow(Screen)`,
+  confirmed via `javap` to be the same behavior (sets the screen and forces
+  a render frame), not a real semantic change. Pinned to exactly `26.2` in
+  `fabric.mod.json` rather than a range, since - unlike 26.1's patches -
+  this hasn't been verified compatible with any other single version.
+
+### Changed
+
+- Fabric and NeoForge can now target different Minecraft versions within
+  the same build (`fabric_minecraft_version` / `neoforge_minecraft_version`
+  in `gradle.properties`, previously one shared `minecraft_version`) - a
+  direct consequence of dropping Architectury Loom for native per-platform
+  tooling in v1.3.0. NeoForge stays on `26.1.2`: NeoForge has no stable
+  (non-beta) build for 26.2 yet.
+
 ## [1.3.1] - 2026-07-13
 
 ### Fixed

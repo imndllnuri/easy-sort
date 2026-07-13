@@ -98,7 +98,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// Left-to-right reading order: S, Q, R, G (indexFromRight counts from
 		// the right edge, so the rightmost button - G - is index 0).
 		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 0, buttonY, true,
-				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
+				() -> this.minecraft.setScreenAndShow(new EasySortConfigScreen((Screen) (Object) this))));
 		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 1, buttonY, true,
 				() -> ClientPlayNetworking.send(new RestockPayload(this.menu.containerId))));
 		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 2, buttonY, true,
