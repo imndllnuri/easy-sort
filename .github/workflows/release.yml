@@ -30,6 +30,17 @@ jobs:
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
+      - name: Determine target Minecraft version from gradle.properties
+        # Was previously hardcoded per publish step below and silently went
+        # stale across three MC version bumps (v1.0.1 through v1.2.0 all
+        # published to Modrinth/CurseForge as "1.21.10" regardless of the
+        # jar's actual target) - reading it from the single source of truth
+        # instead so it can't drift again.
+        id: mc_version
+        run: |
+          value=$(grep -m1 '^minecraft_version=' gradle.properties | cut -d= -f2)
+          echo "value=$value" >> "$GITHUB_OUTPUT"
+
       - name: Determine release channel from the tag
         id: channel
         run: |
@@ -74,7 +85,7 @@ jobs:
           version-type: ${{ steps.channel.outputs.value }}
           changelog-file: CHANGELOG.md
           loaders: fabric
-          game-versions: 1.21.10
+          game-versions: ${{ steps.mc_version.outputs.value }}
           # Fabric API dependency isn't declared here yet - set it manually on
           # each platform's project settings page for now, or add it here
           # later once the exact `id@version(type)` syntax is confirmed.
@@ -92,4 +103,4 @@ jobs:
           version-type: ${{ steps.channel.outputs.value }}
           changelog-file: CHANGELOG.md
           loaders: neoforge
-          game-versions: 1.21.10
+          game-versions: ${{ steps.mc_version.outputs.value }}
