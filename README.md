@@ -26,6 +26,20 @@ Stable (`1.4.0`). MVP and all post-MVP-so-far features (Restock, Quick
 Stack, shulker boxes) are complete on both Fabric and NeoForge; see
 [ROADMAP.md](ROADMAP.md) for what's shipped and what's next.
 
+## Screenshots
+
+| Before | After |
+|---|---|
+| ![Chest before sorting](media/gallery/02-chest-before.png) | ![Chest after sorting](media/gallery/01-chest-after.png) |
+| ![Player inventory before sorting](media/gallery/04-player-inventory-before.png) | ![Player inventory after sorting](media/gallery/03-player-inventory-after.png) |
+| ![Shulker box before sorting](media/gallery/06-shulker-box-before.png) | ![Shulker box after sorting](media/gallery/05-shulker-box-after.png) |
+| ![Barrel before sorting](media/gallery/08-barrel-before.png) | ![Barrel after sorting](media/gallery/07-barrel-after.png) |
+
+Settings screen, choosing a sort order:
+
+![Settings screen: Sort by Mod](media/gallery/10-settings-sort-by-mod.png)
+![Settings screen: Sort by Item ID](media/gallery/11-settings-sort-by-item-id.png)
+
 ## Supported versions
 
 Fabric and NeoForge can target different Minecraft versions independently -
