@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-07-20
+
+### Changed
+
+- **NeoForge:** bumped `neoforge_version` from `26.1.2.78` to `26.1.2.82`
+  (latest stable build for the same `26.1.2` Minecraft target) and
+  `moddev_version` (ModDevGradle) from `2.0.141` to `2.0.142`.
+
+### Fixed
+
+- **NeoForge:** `KeyMapping.Category.register(Identifier)` was deprecated by
+  the `26.1.2.82` patch build in favor of the public
+  `new KeyMapping.Category(Identifier)` constructor (same behavior, confirmed
+  via `javap`) - switched to avoid the deprecation warning. Fabric is
+  unaffected; this is specific to NeoForge's patched vanilla jar.
+
 ## [1.4.0] - 2026-07-13
 
 ### Added

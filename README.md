@@ -22,7 +22,7 @@ partial stacks — no inventory-management suite bloat, no forced GUI overhaul.
 
 ## Status
 
-Stable (`1.4.0`). MVP and all post-MVP-so-far features (Restock, Quick
+Stable (`1.4.1`). MVP and all post-MVP-so-far features (Restock, Quick
 Stack, shulker boxes) are complete on both Fabric and NeoForge; see
 [ROADMAP.md](ROADMAP.md) for what's shipped and what's next.
 

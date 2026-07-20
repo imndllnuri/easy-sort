@@ -23,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 public final class EasySortNeoForgeClient {
 
 	private static final KeyMapping.Category CATEGORY =
-			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "easy_sort"));
+			new KeyMapping.Category(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "easy_sort"));
 
 	private static KeyMapping sortInventoryKey;
 	private static KeyMapping sortContainerKey;
