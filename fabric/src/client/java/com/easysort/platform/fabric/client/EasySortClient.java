@@ -1,31 +1,33 @@
 package com.easysort.platform.fabric.client;
 
 import com.easysort.platform.common.MenuContainers;
-import com.easysort.platform.fabric.EasySort;
 import com.easysort.platform.fabric.client.config.EasySortClientConfig;
+import com.easysort.platform.fabric.client.network.PayloadSending;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class EasySortClient implements ClientModInitializer {
 
-	private static final KeyMapping.Category CATEGORY =
-			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "easy_sort"));
+	// KeyMapping.Category is a Minecraft 1.21.9+ addition - on 1.19.2 a
+	// KeyMapping's category is just a plain string, auto-registered the first
+	// time a KeyMapping using it is constructed, and used directly as the
+	// translation key (see the existing "key.category.easy-sort.easy_sort"
+	// entry in lang/en_us.json).
+	private static final String CATEGORY = "key.category.easy-sort.easy_sort";
 
-	private static final KeyMapping SORT_INVENTORY_KEY = KeyMappingHelper.registerKeyMapping(
+	private static final KeyMapping SORT_INVENTORY_KEY = KeyBindingHelper.registerKeyBinding(
 			new KeyMapping("key.easy-sort.sort_inventory", GLFW.GLFW_KEY_R, CATEGORY));
 
 	// Unbound by default - "S" is movement, and there's no other obviously
 	// safe default key for "sort the container I'm looking at".
-	private static final KeyMapping SORT_CONTAINER_KEY = KeyMappingHelper.registerKeyMapping(
+	private static final KeyMapping SORT_CONTAINER_KEY = KeyBindingHelper.registerKeyBinding(
 			new KeyMapping("key.easy-sort.sort_container", GLFW.GLFW_KEY_UNKNOWN, CATEGORY));
 
 	@Override
@@ -45,13 +47,15 @@ public final class EasySortClient implements ClientModInitializer {
 			if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) {
 				return;
 			}
-			ScreenKeyboardEvents.afterKeyPress(screen).register((s, keyEvent) -> {
-				if (SORT_INVENTORY_KEY.matches(keyEvent)) {
-					ClientPlayNetworking.send(new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey()));
+			ScreenKeyboardEvents.afterKeyPress(screen).register((s, key, scancode, modifiers) -> {
+				if (SORT_INVENTORY_KEY.matches(key, scancode)) {
+					PayloadSending.sendToServer(SortPlayerInventoryPayload.ID,
+							new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey())::write);
 				}
-				if (SORT_CONTAINER_KEY.matches(keyEvent) && MenuContainers.isSupported(containerScreen.getMenu())) {
-					ClientPlayNetworking.send(new SortContainerPayload(containerScreen.getMenu().containerId,
-							EasySortClientConfig.getPrimarySortKey()));
+				if (SORT_CONTAINER_KEY.matches(key, scancode) && MenuContainers.isSupported(containerScreen.getMenu())) {
+					PayloadSending.sendToServer(SortContainerPayload.ID,
+							new SortContainerPayload(containerScreen.getMenu().containerId,
+									EasySortClientConfig.getPrimarySortKey())::write);
 				}
 			});
 		});

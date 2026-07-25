@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Ported Fabric to Minecraft 1.19.2, on the `mc/1.19.x` branch (NeoForge is
+  intentionally not built here - it forked from Forge starting at 1.20.1, so
+  it never had a release for 1.19.x). Real mappings are required again for
+  this obfuscated Minecraft version: official Mojang mappings layered with
+  Parchment `2022.11.27`, applied via Architectury Loom rather than plain
+  Fabric Loom (the latter now only supports this project's unobfuscated
+  26.x-era branches). Fabric API `0.77.0+1.19.2`, Fabric Loader `0.19.3`, Java
+  17. Notable API adaptations from the 26.x-era code this was ported from:
+  Data Components don't exist yet, so the sort/stack variant key is now
+  computed from the item's NBT tag instead; Fabric's typed
+  CustomPayload/PayloadTypeRegistry networking is a 1.20.5+ addition, so the
+  four network payloads were ported to raw ResourceLocation-keyed
+  FriendlyByteBuf channels instead (`fabric-networking-api-v1` 1.2.x); and the
+  GUI code (mini buttons, config screen, container-screen mixin) was ported
+  off GuiGraphics to the PoseStack-based rendering API of that era.
+
 ## [1.4.1] - 2026-07-20
 
 ### Changed

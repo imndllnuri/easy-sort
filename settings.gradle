@@ -13,6 +13,53 @@ pluginManagement {
 				includeGroupAndSubgroups('net.fabricmc')
 			}
 		}
+		// Minecraft 1.19.2 ships obfuscated (unlike this project's later 26.x-era
+		// branches), so it needs real mappings. The plain "net.fabricmc.fabric-loom"
+		// plugin has been repurposed to only support Minecraft's unobfuscated era
+		// (26.1+) and hard-refuses to configure mappings for an obfuscated version -
+		// verified empirically while porting this branch. Architectury Loom is the
+		// actively-maintained fork that still supports obfuscated versions with the
+		// same loom{} DSL, so both common/ and fabric/ apply "dev.architectury.loom"
+		// instead on this branch.
+		exclusiveContent {
+			forRepository {
+				maven {
+					name = 'Architectury'
+					url = 'https://maven.architectury.dev/'
+				}
+			}
+			filter {
+				includeGroupAndSubgroups('dev.architectury')
+			}
+		}
+		// Architectury Loom's own buildscript classpath pulls in a few
+		// Forge-toolchain-only transitive dependencies (mcinjector, DiffPatch,
+		// datafixerupper) even though this branch never applies a Forge/NeoForge
+		// platform - it's one artifact shared across all the platforms Architectury
+		// Loom supports.
+		exclusiveContent {
+			forRepository {
+				maven {
+					name = 'MinecraftForge'
+					url = 'https://maven.minecraftforge.net/'
+				}
+			}
+			filter {
+				includeGroup('de.oceanlabs.mcp')
+				includeGroup('net.minecraftforge')
+			}
+		}
+		exclusiveContent {
+			forRepository {
+				maven {
+					name = 'MojangLibraries'
+					url = 'https://libraries.minecraft.net/'
+				}
+			}
+			filter {
+				includeGroup('com.mojang')
+			}
+		}
 	}
 }
 
@@ -25,4 +72,6 @@ rootProject.name = "easy-sort"
 includeBuild("build-logic")
 include("common")
 include("fabric")
-include("neoforge")
+// No neoforge module on this branch: NeoForge is a fork of Forge that only
+// started existing at Minecraft 1.20.1, so it never had a release for
+// 1.19.x. This branch is Fabric-only.

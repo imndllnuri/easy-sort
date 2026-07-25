@@ -21,24 +21,24 @@ public final class EasySortConfigScreen extends Screen {
 
 	@Override
 	protected void init() {
-		this.addRenderableWidget(Button.builder(sortByLabel(), button -> {
-					primarySortKey = next(primarySortKey);
-					button.setMessage(sortByLabel());
-				})
-				.bounds(this.width / 2 - 100, this.height / 2 - 20, 200, 20)
-				.build());
+		// Button.builder(...).bounds(...).build() is a Minecraft 1.19.4+
+		// addition - on 1.19.2, Button's direct (x, y, width, height, message,
+		// onPress) constructor is used instead.
+		this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 2 - 20, 200, 20, sortByLabel(), button -> {
+			primarySortKey = next(primarySortKey);
+			button.setMessage(sortByLabel());
+		}));
 
-		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> {
+		this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 2 + 10, 200, 20,
+				Component.translatable("gui.done"), button -> {
 					EasySortClientConfig.setPrimarySortKey(primarySortKey);
 					this.onClose();
-				})
-				.bounds(this.width / 2 - 100, this.height / 2 + 10, 200, 20)
-				.build());
+				}));
 	}
 
 	@Override
 	public void onClose() {
-		this.minecraft.setScreenAndShow(parent);
+		this.minecraft.setScreen(parent);
 	}
 
 	private Component sortByLabel() {

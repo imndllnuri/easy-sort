@@ -1,28 +1,25 @@
 package com.easysort.platform.fabric.network;
 
 import com.easysort.platform.fabric.EasySort;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
-/** "Move matching items from my inventory into this open container." */
-public record QuickStackPayload(int containerId) implements CustomPacketPayload {
+/**
+ * "Move matching items from my inventory into this open container."
+ *
+ * <p>Fabric's typed CustomPayload/PayloadTypeRegistry API is a 1.20.5+
+ * addition - on 1.19.2 (fabric-networking-api-v1 1.2.x), channels are plain
+ * ResourceLocation-keyed raw FriendlyByteBuf packets instead.
+ */
+public record QuickStackPayload(int containerId) {
 
-	public static final Type<QuickStackPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "quick_stack"));
+	public static final ResourceLocation ID = new ResourceLocation(EasySort.MOD_ID, "quick_stack");
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, QuickStackPayload> CODEC =
-			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, QuickStackPayload::containerId, QuickStackPayload::new);
-
-	public static void register() {
-		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
+	public void write(FriendlyByteBuf buf) {
+		buf.writeVarInt(containerId);
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	public static QuickStackPayload read(FriendlyByteBuf buf) {
+		return new QuickStackPayload(buf.readVarInt());
 	}
 }

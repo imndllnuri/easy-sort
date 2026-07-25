@@ -14,11 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 17
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -29,20 +29,6 @@ jobs:
       - name: Determine mod version (tag name without the leading 'v')
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-
-      - name: Determine NeoForge's target Minecraft version from gradle.properties
-        # Was previously hardcoded per publish step below and silently went
-        # stale across three MC version bumps (v1.0.1 through v1.2.0 all
-        # published to Modrinth/CurseForge as "1.21.10" regardless of the
-        # jar's actual target) - reading it from the single source of truth
-        # instead so it can't drift again. Fabric and NeoForge can target
-        # different Minecraft versions (see gradle.properties), so only
-        # NeoForge's publish step below reads this - Fabric's game-versions
-        # is set directly in its own publish step.
-        id: mc_version
-        run: |
-          value=$(grep -m1 '^neoforge_minecraft_version=' gradle.properties | cut -d= -f2)
-          echo "value=$value" >> "$GITHUB_OUTPUT"
 
       - name: Determine release channel from the tag
         id: channel
@@ -56,17 +42,15 @@ jobs:
           fi
 
       - name: Stage release artifacts with loader-unique names
-        # fabric/ and neoforge/ both produce identically-named jars
-        # (easy-sort-<version>.jar) - a GitHub Release requires unique asset
-        # filenames, so upload straight from both build/libs/ dirs would
-        # silently collide/overwrite instead of attaching both.
+        # This branch only builds Fabric (NeoForge never existed for 1.19.x -
+        # it forked from Forge starting at 1.20.1), but the jars are still
+        # renamed for consistency with this project's other, multi-loader
+        # branches, and so a GitHub Release's asset filenames stay predictable.
         run: |
           mkdir -p release-artifacts
           V="${{ steps.version.outputs.value }}"
           cp "fabric/build/libs/easy-sort-$V.jar" "release-artifacts/easy-sort-$V-fabric.jar"
           cp "fabric/build/libs/easy-sort-$V-sources.jar" "release-artifacts/easy-sort-$V-fabric-sources.jar"
-          cp "neoforge/build/libs/easy-sort-$V.jar" "release-artifacts/easy-sort-$V-neoforge.jar"
-          cp "neoforge/build/libs/easy-sort-$V-sources.jar" "release-artifacts/easy-sort-$V-neoforge-sources.jar"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -89,29 +73,13 @@ jobs:
           changelog-file: CHANGELOG.md
           loaders: fabric
           # Keep this in sync with fabric.mod.json's "minecraft" depends
-          # entry by hand whenever that changes - it's a separate value
-          # here (not read from gradle.properties like NeoForge below)
-          # because it can legitimately be a *range* when a build has been
-          # verified compatible across several patches (e.g. "26.1.x" was
-          # ">=26.1 <26.2" in v1.3.1), not just the single version this was
+          # entry by hand whenever that changes - it's a separate value here
+          # (not read from gradle.properties) because it can legitimately be
+          # a *range* when a build has been verified compatible across
+          # several patches, not just the single version this was
           # built/tested against.
           game-versions: |
-            26.2
+            1.19.2
           # Fabric API dependency isn't declared here yet - set it manually on
           # each platform's project settings page for now, or add it here
           # later once the exact `id@version(type)` syntax is confirmed.
-
-      - name: Publish NeoForge build to Modrinth & CurseForge
-        uses: Kir-Antipov/mc-publish@v3.3
-        with:
-          modrinth-id: "tNAlPFb9"
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          curseforge-id: "1596721"
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          files: neoforge/build/libs/easy-sort-${{ steps.version.outputs.value }}.jar
-          name: Easy Sort ${{ github.ref_name }} (NeoForge)
-          version: ${{ github.ref_name }}
-          version-type: ${{ steps.channel.outputs.value }}
-          changelog-file: CHANGELOG.md
-          loaders: neoforge
-          game-versions: ${{ steps.mc_version.outputs.value }}

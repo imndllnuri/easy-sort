@@ -6,7 +6,7 @@ import com.easysort.core.sort.SortEngine;
 import com.easysort.core.sort.SortResult;
 import com.easysort.core.transfer.TransferEngine;
 import com.easysort.core.transfer.TransferResult;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -93,11 +93,18 @@ public final class ContainerAdapter {
 				slots.add(null);
 				continue;
 			}
-			String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
-			long variantKey = stack.getComponents().hashCode();
+			String itemId = Registry.ITEM.getKey(stack.getItem()).toString();
+			// No Data Components on 1.19.2 (added in 1.20.5) - items instead carry
+			// an NBT CompoundTag (enchantments, custom names, ...). CompoundTag's
+			// equals/hashCode are content-based (it wraps a Map<String, Tag>), so
+			// hashing it is the direct equivalent of hashing getComponents(): two
+			// stacks are the same variant iff they'd merge into one stack in
+			// vanilla, i.e. same item and same tag (absent tag hashes to 0).
+			long variantKey = stack.hasTag() ? stack.getTag().hashCode() : 0;
 			templates.putIfAbsent(new VariantKey(itemId, variantKey), stack);
+			int maxStackSize = Math.min(container.getMaxStackSize(), stack.getMaxStackSize());
 			slots.add(new SortableItem(itemId, stack.getHoverName().getString(), stack.getCount(),
-					container.getMaxStackSize(stack), i - fromSlot, variantKey));
+					maxStackSize, i - fromSlot, variantKey));
 		}
 		return slots;
 	}
@@ -112,7 +119,12 @@ public final class ContainerAdapter {
 				container.setItem(slotIndex, ItemStack.EMPTY);
 			} else {
 				ItemStack template = templates.get(new VariantKey(item.itemId(), item.variantKey()));
-				container.setItem(slotIndex, template.copyWithCount(item.count()));
+				// No ItemStack#copyWithCount(int) on 1.19.2 (added in 1.20.5) -
+				// copy() deep-copies the stack (including its NBT tag) at its
+				// original count, then setCount() adjusts it to match.
+				ItemStack copy = template.copy();
+				copy.setCount(item.count());
+				container.setItem(slotIndex, copy);
 			}
 		}
 		container.setChanged();

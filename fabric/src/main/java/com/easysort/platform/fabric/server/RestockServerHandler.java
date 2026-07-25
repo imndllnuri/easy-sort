@@ -14,8 +14,13 @@ public final class RestockServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(RestockPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(RestockPayload.ID, (server, player, handler, buf, responseSender) -> {
+			// The buf is only valid for the duration of this callback (it runs on
+			// netty's event loop, not the server thread), so it must be fully read
+			// here, before scheduling the actual handling on the server thread.
+			RestockPayload payload = RestockPayload.read(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(RestockPayload payload, ServerPlayer player) {

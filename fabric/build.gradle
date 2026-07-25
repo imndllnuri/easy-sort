@@ -1,6 +1,6 @@
 plugins {
 	id 'multiloader-loader'
-	id 'net.fabricmc.fabric-loom'
+	id 'dev.architectury.loom'
 }
 
 loom {
@@ -23,8 +23,22 @@ fabricApi {
 	}
 }
 
+repositories {
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+}
+
 dependencies {
-	minecraft "com.mojang:minecraft:${fabric_minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
+	}
+	// modImplementation, not plain implementation: unlike this project's later
+	// unobfuscated 26.x-era branches, these are published in intermediary
+	// mappings on 1.19.2 and Loom must remap them to match our mappings.
+	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }

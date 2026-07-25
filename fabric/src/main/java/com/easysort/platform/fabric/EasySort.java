@@ -1,9 +1,5 @@
 package com.easysort.platform.fabric;
 
-import com.easysort.platform.fabric.network.QuickStackPayload;
-import com.easysort.platform.fabric.network.RestockPayload;
-import com.easysort.platform.fabric.network.SortContainerPayload;
-import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import com.easysort.platform.fabric.server.QuickStackServerHandler;
 import com.easysort.platform.fabric.server.RestockServerHandler;
 import com.easysort.platform.fabric.server.SortContainerServerHandler;
@@ -19,13 +15,13 @@ public final class EasySort implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Easy Sort initializing");
-		SortContainerPayload.register();
+		// Unlike this project's later unobfuscated 26.x-era branches, 1.19.2's
+		// raw-channel networking API (fabric-networking-api-v1 1.2.x) has no
+		// separate payload-type registration step - registerGlobalReceiver()
+		// on the server handler is the only registration needed.
 		SortContainerServerHandler.register();
-		SortPlayerInventoryPayload.register();
 		SortPlayerInventoryServerHandler.register();
-		QuickStackPayload.register();
 		QuickStackServerHandler.register();
-		RestockPayload.register();
 		RestockServerHandler.register();
 	}
 }

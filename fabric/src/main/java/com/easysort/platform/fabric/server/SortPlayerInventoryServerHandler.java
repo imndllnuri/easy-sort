@@ -13,15 +13,20 @@ public final class SortPlayerInventoryServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(SortPlayerInventoryPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(SortPlayerInventoryPayload.ID, (server, player, handler, buf, responseSender) -> {
+			// The buf is only valid for the duration of this callback (it runs on
+			// netty's event loop, not the server thread), so it must be fully read
+			// here, before scheduling the actual handling on the server thread.
+			SortPlayerInventoryPayload payload = SortPlayerInventoryPayload.read(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(SortPlayerInventoryPayload payload, ServerPlayer player) {
 		// Sorts only the 27 main storage slots - never the hotbar (reordering
 		// it mid-use would be jarring/dangerous, e.g. moving your held tool)
 		// and never armor/offhand, which sit past index INVENTORY_SIZE.
-		ContainerAdapter.sort(player.getInventory(), Inventory.SELECTION_SIZE, Inventory.INVENTORY_SIZE,
+		ContainerAdapter.sort(player.getInventory(), Inventory.getSelectionSize(), Inventory.INVENTORY_SIZE,
 				SortConfig.withPrimary(payload.primarySortKey()));
 		player.containerMenu.broadcastFullState();
 	}

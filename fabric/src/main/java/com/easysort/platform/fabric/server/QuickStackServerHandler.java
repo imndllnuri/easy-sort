@@ -14,8 +14,13 @@ public final class QuickStackServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(QuickStackPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(QuickStackPayload.ID, (server, player, handler, buf, responseSender) -> {
+			// The buf is only valid for the duration of this callback (it runs on
+			// netty's event loop, not the server thread), so it must be fully read
+			// here, before scheduling the actual handling on the server thread.
+			QuickStackPayload payload = QuickStackPayload.read(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(QuickStackPayload payload, ServerPlayer player) {

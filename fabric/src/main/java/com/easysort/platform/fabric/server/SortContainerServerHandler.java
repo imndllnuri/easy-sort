@@ -19,8 +19,13 @@ public final class SortContainerServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(SortContainerPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(SortContainerPayload.ID, (server, player, handler, buf, responseSender) -> {
+			// The buf is only valid for the duration of this callback (it runs on
+			// netty's event loop, not the server thread), so it must be fully read
+			// here, before scheduling the actual handling on the server thread.
+			SortContainerPayload payload = SortContainerPayload.read(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(SortContainerPayload payload, ServerPlayer player) {

@@ -1,19 +1,33 @@
 plugins {
 	id 'multiloader-common'
-	id 'net.neoforged.moddev'
+	id 'dev.architectury.loom'
 }
 
-neoForge {
-	// No mods{}/runs{} block on purpose - this module never runs as a mod by
-	// itself. NeoForge's own decompiled/joined Minecraft artifact is applied
-	// here purely so common/ has real vanilla classes (AbstractContainerMenu,
-	// ChestMenu, ShulkerBoxMenu, ...) to compile against. Minecraft ships
-	// unobfuscated from 26.1 onward, so there's no mappings config at all -
-	// the classes here already have their real names.
-	neoFormVersion = neo_form_version
+// No mods{}/runs{} configuration on purpose - this module never runs as a
+// mod by itself. Architectury Loom is applied here purely so common/ has real,
+// mapped vanilla classes (Container, ItemStack, AbstractContainerMenu,
+// ChestMenu, ShulkerBoxMenu, ...) to compile common's own compileJava/test
+// tasks against. Minecraft 1.19.2 ships obfuscated, so - unlike this
+// project's later 26.x-era branches - real mappings are required: official
+// Mojang mappings layered with Parchment (parameter names/javadoc), the same
+// mappings fabric/build.gradle applies. No fabric-loader/fabric-api
+// dependency is needed here since common never ships or runs as a jar of its
+// own; the actual shipped bytecode comes from fabric/ recompiling common's
+// sources against its own mapped classpath (see multiloader-loader.gradle).
+repositories {
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
 }
 
 dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
+	}
+
 	testImplementation platform("org.junit:junit-bom:5.11.0")
 	testImplementation "org.junit.jupiter:junit-jupiter"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
