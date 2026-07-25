@@ -94,10 +94,21 @@ public final class ContainerAdapter {
 				continue;
 			}
 			String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
-			long variantKey = stack.getComponents().hashCode();
+			// Pre-Data-Components (< 1.20.5): items carry an NBT tag instead of
+			// a DataComponentMap. hashCode() of that tag (0 when absent) is the
+			// direct equivalent of the getComponents().hashCode() approach used
+			// from 1.20.5 onward - same semantics (two stacks are considered the
+			// same variant iff vanilla would merge them), same hashCode-collision
+			// risk profile, just keyed off the older NBT-based identity instead.
+			long variantKey = stack.hasTag() ? stack.getTag().hashCode() : 0;
 			templates.putIfAbsent(new VariantKey(itemId, variantKey), stack);
+			// Container.getMaxStackSize(ItemStack) (a later addition) doesn't
+			// exist at 1.20.1 - Container only exposes its own hard cap, so the
+			// effective per-item limit is the smaller of that and the stack's
+			// own max size, same as what the newer overload computes internally.
+			int maxStackSize = Math.min(container.getMaxStackSize(), stack.getMaxStackSize());
 			slots.add(new SortableItem(itemId, stack.getHoverName().getString(), stack.getCount(),
-					container.getMaxStackSize(stack), i - fromSlot, variantKey));
+					maxStackSize, i - fromSlot, variantKey));
 		}
 		return slots;
 	}

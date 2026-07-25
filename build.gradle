@@ -1,8 +1,18 @@
 plugins {
 	// see https://fabricmc.net/develop/ for new versions
-	id "net.fabricmc.fabric-loom" version "${fabric_loom_version}" apply false
+	// 1.20.1 ships obfuscated, so it needs the "-remap" plugin variant - the
+	// classic full remapping toolchain (officialMojangMappings()/Parchment,
+	// etc.). Plain "net.fabricmc.fabric-loom" is the newer, thin plugin for
+	// unobfuscated Minecraft (26.1+, see mc/26.1.2 and later) and forcibly
+	// disables obfuscation handling entirely - confirmed by hitting
+	// "Cannot configure layered mappings in a non-obfuscated environment"
+	// when trying to use it here.
+	id "net.fabricmc.fabric-loom-remap" version "${fabric_loom_version}" apply false
 	// see https://projects.neoforged.net/neoforged/moddevgradle for new versions
-	id "net.neoforged.moddev" version "${moddev_version}" apply false
+	// 1.20.1 uses ModDevGradle's "legacyforge" addon plugin (net.minecraftforge-
+	// package era, SRG-mapped runtime) rather than the normal plugin - see
+	// gradle.properties for why.
+	id "net.neoforged.moddev.legacyforge" version "${moddev_version}" apply false
 }
 
 allprojects {

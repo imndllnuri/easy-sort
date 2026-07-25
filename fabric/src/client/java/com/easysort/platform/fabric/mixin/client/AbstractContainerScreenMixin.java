@@ -2,13 +2,13 @@ package com.easysort.platform.fabric.mixin.client;
 
 import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.fabric.client.config.EasySortClientConfig;
+import com.easysort.platform.fabric.client.network.ClientNetworking;
 import com.easysort.platform.fabric.client.screen.EasySortConfigScreen;
 import com.easysort.platform.fabric.client.widget.MiniButton;
 import com.easysort.platform.fabric.network.QuickStackPayload;
 import com.easysort.platform.fabric.network.RestockPayload;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -74,8 +74,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		int inventoryLabelY = this.imageHeight - 94;
 		int inventoryButtonY = this.topPos + inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 		MiniButton inventoryButton = easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY,
-				true, () -> ClientPlayNetworking.send(
-						new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey())));
+				true, () -> ClientNetworking.send(new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey())));
 		this.addRenderableWidget(inventoryButton);
 
 		// CreativeModeInventoryScreen reuses this same screen/widgets across all
@@ -83,7 +82,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// so only the one "Inventory" tab that shows real player items should
 		// keep this button visible - re-checked every frame since tab changes
 		// don't fire any event we can hook once.
-		ScreenEvents.beforeExtract((Screen) (Object) this).register((screen, graphics, mouseX, mouseY, tickDelta) ->
+		ScreenEvents.beforeRender((Screen) (Object) this).register((screen, poseStack, mouseX, mouseY, tickDelta) ->
 				inventoryButton.visible = !(screen instanceof CreativeModeInventoryScreen)
 						|| CreativeModeInventoryScreenAccessor.easysort$getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY);
 
@@ -98,14 +97,13 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		// Left-to-right reading order: S, Q, R, G (indexFromRight counts from
 		// the right edge, so the rightmost button - G - is index 0).
 		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 0, buttonY, true,
-				() -> this.minecraft.setScreenAndShow(new EasySortConfigScreen((Screen) (Object) this))));
+				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
 		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 1, buttonY, true,
-				() -> ClientPlayNetworking.send(new RestockPayload(this.menu.containerId))));
+				() -> ClientNetworking.send(new RestockPayload(this.menu.containerId))));
 		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 2, buttonY, true,
-				() -> ClientPlayNetworking.send(new QuickStackPayload(this.menu.containerId))));
+				() -> ClientNetworking.send(new QuickStackPayload(this.menu.containerId))));
 		this.addRenderableWidget(easysort$button("S", "easy-sort.button.sort", 3, buttonY, true,
-				() -> ClientPlayNetworking.send(new SortContainerPayload(this.menu.containerId,
-						EasySortClientConfig.getPrimarySortKey()))));
+				() -> ClientNetworking.send(new SortContainerPayload(this.menu.containerId, EasySortClientConfig.getPrimarySortKey()))));
 	}
 
 	private MiniButton easysort$button(String glyph, String tooltipKey, int indexFromRight, int buttonY,

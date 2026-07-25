@@ -8,7 +8,7 @@ import com.easysort.platform.neoforge.network.QuickStackPayload;
 import com.easysort.platform.neoforge.network.RestockPayload;
 import com.easysort.platform.neoforge.network.SortContainerPayload;
 import com.easysort.platform.neoforge.network.SortPlayerInventoryPayload;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,7 +16,6 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.CreativeModeTab;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,10 +33,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * Mirrors the Fabric platform's AbstractContainerScreenMixin exactly in
  * intent; the "I" button's Creative-tab visibility is re-checked via a
- * second inject at extractRenderState() HEAD (scoped to this screen instance,
- * no global listener/leak) instead of Fabric API's per-screen
- * ScreenEvents.beforeExtract, since AbstractWidget.extractRenderState()
- * itself is final and can't be overridden to self-recompute visibility.
+ * second inject at render() HEAD (scoped to this screen instance, no global
+ * listener/leak) rather than a Fabric-API-style per-screen render event,
+ * since there's no equivalent NeoForge hook that fires this often without
+ * going through the global forge event bus.
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen {
@@ -85,8 +84,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		int inventoryLabelY = this.imageHeight - 94;
 		int inventoryButtonY = this.topPos + inventoryLabelY - (BUTTON_SIZE - 8) / 2 - 1;
 		easysort$inventoryButton = easysort$button("I", "easy-sort.button.sort_inventory", 0, inventoryButtonY,
-				true, () -> ClientPacketDistributor.sendToServer(
-						new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey())));
+				true, () -> new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey()).send());
 		this.addRenderableWidget(easysort$inventoryButton);
 
 		if (!MenuContainers.isSupported(this.menu)) {
@@ -102,12 +100,11 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 		this.addRenderableWidget(easysort$button("G", "easy-sort.button.settings", 0, buttonY, true,
 				() -> this.minecraft.setScreen(new EasySortConfigScreen((Screen) (Object) this))));
 		this.addRenderableWidget(easysort$button("R", "easy-sort.button.restock", 1, buttonY, true,
-				() -> ClientPacketDistributor.sendToServer(new RestockPayload(this.menu.containerId))));
+				() -> new RestockPayload(this.menu.containerId).send()));
 		this.addRenderableWidget(easysort$button("Q", "easy-sort.button.quick_stack", 2, buttonY, true,
-				() -> ClientPacketDistributor.sendToServer(new QuickStackPayload(this.menu.containerId))));
+				() -> new QuickStackPayload(this.menu.containerId).send()));
 		this.addRenderableWidget(easysort$button("S", "easy-sort.button.sort", 3, buttonY, true,
-				() -> ClientPacketDistributor.sendToServer(new SortContainerPayload(this.menu.containerId,
-						EasySortClientConfig.getPrimarySortKey()))));
+				() -> new SortContainerPayload(this.menu.containerId, EasySortClientConfig.getPrimarySortKey()).send()));
 	}
 
 	// CreativeModeInventoryScreen reuses this same screen/widgets across all
@@ -115,8 +112,8 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 	// so only the one "Inventory" tab that shows real player items should
 	// keep this button visible - re-checked every frame since tab changes
 	// don't fire any event we can hook once.
-	@Inject(method = "extractRenderState", at = @At("HEAD"))
-	private void easysort$updateInventoryButtonVisibility(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+	@Inject(method = "render", at = @At("HEAD"))
+	private void easysort$updateInventoryButtonVisibility(GuiGraphics graphics, int mouseX, int mouseY,
 			float partialTick, CallbackInfo ci) {
 		easysort$inventoryButton.visible = !((Object) this instanceof CreativeModeInventoryScreen)
 				|| CreativeModeInventoryScreenAccessor.easysort$getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY;

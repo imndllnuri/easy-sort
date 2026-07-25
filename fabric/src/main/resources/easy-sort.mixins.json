@@ -2,7 +2,7 @@
 	"required": true,
 	"minVersion": "0.8",
 	"package": "com.easysort.platform.fabric.mixin",
-	"compatibilityLevel": "JAVA_25",
+	"compatibilityLevel": "JAVA_17",
 	"client": [
 		"client.AbstractContainerScreenMixin",
 		"client.CreativeModeInventoryScreenAccessor"

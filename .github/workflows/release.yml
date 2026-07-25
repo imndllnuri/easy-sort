@@ -96,7 +96,7 @@ jobs:
           # ">=26.1 <26.2" in v1.3.1), not just the single version this was
           # built/tested against.
           game-versions: |
-            26.2
+            1.20.1
           # Fabric API dependency isn't declared here yet - set it manually on
           # each platform's project settings page for now, or add it here
           # later once the exact `id@version(type)` syntax is confirmed.

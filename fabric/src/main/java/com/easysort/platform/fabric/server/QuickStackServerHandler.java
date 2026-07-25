@@ -14,8 +14,10 @@ public final class QuickStackServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(QuickStackPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(QuickStackPayload.CHANNEL, (server, player, handler, buf, responseSender) -> {
+			QuickStackPayload payload = QuickStackPayload.decode(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(QuickStackPayload payload, ServerPlayer player) {

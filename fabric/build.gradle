@@ -1,8 +1,13 @@
 plugins {
 	id 'multiloader-loader'
-	id 'net.fabricmc.fabric-loom'
+	id 'net.fabricmc.fabric-loom-remap'
 }
 
+// 1.20.1 ships obfuscated, unlike 26.1+ (see mc/26.1.2 and later branches) -
+// real mappings are required. This project's mapping choice (see
+// mc/1.21.x's build.gradle for the equivalent under the old Architectury
+// toolchain) is Mojang's official mappings layered with Parchment for
+// parameter names/javadocs.
 loom {
 	splitEnvironmentSourceSets()
 
@@ -23,8 +28,23 @@ fabricApi {
 	}
 }
 
+repositories {
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${fabric_minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-${parchment_minecraft_version}:${parchment_version}@zip")
+	}
+	// modImplementation (not plain implementation) so Loom actually remaps
+	// these mod jars from intermediary to our project's official+Parchment
+	// mappings - required in this obfuscated environment (unlike 26.1+,
+	// see mc/26.1.2 and later, where there's nothing to remap).
+	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }

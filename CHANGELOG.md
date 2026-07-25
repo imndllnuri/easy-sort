@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Ported to Minecraft 1.20.1 on both Fabric and NeoForge - the oldest
+  Minecraft version NeoForge supports at all, so the oldest version where
+  both loaders are possible together. Unlike the current 26.1+ mainline,
+  1.20.1 ships obfuscated, so both loaders now build against real mappings
+  (Mojang official + Parchment). NeoForge targets it via its legacy
+  `net.neoforged:forge` 1.20.1-47.1.x coordinates and ModDevGradle's
+  `legacyforge` addon plugin, predating NeoForge's own dependency/package
+  naming (that starts at 1.20.2). Fabric and NeoForge networking were both
+  ported off their current CustomPacketPayload-based APIs (a 1.20.5+/very
+  recent NeoForge addition) to their classic per-version equivalents
+  (Fabric's channel-based networking API, Forge's `SimpleChannel`).
+
 ## [1.4.1] - 2026-07-20
 
 ### Changed

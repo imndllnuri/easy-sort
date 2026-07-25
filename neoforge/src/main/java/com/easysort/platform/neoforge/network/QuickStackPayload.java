@@ -1,29 +1,37 @@
 package com.easysort.platform.neoforge.network;
 
-import com.easysort.platform.neoforge.EasySortNeoForge;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /** "Move matching items from my inventory into this open container." */
-public record QuickStackPayload(int containerId) implements CustomPacketPayload {
+public record QuickStackPayload(int containerId) {
 
-	public static final Type<QuickStackPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "quick_stack"));
-
-	public static final StreamCodec<RegistryFriendlyByteBuf, QuickStackPayload> CODEC =
-			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, QuickStackPayload::containerId, QuickStackPayload::new);
-
-	public static void register(PayloadRegistrar registrar, IPayloadHandler<QuickStackPayload> handler) {
-		registrar.playToServer(TYPE, CODEC, handler);
+	public void send() {
+		NetworkSetup.CHANNEL.sendToServer(this);
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	static void encode(QuickStackPayload payload, FriendlyByteBuf buf) {
+		buf.writeVarInt(payload.containerId());
+	}
+
+	static QuickStackPayload decode(FriendlyByteBuf buf) {
+		return new QuickStackPayload(buf.readVarInt());
+	}
+
+	public static void register(SimpleChannel channel, int id, BiConsumer<QuickStackPayload, ServerPlayer> handler) {
+		channel.registerMessage(id, QuickStackPayload.class, QuickStackPayload::encode, QuickStackPayload::decode,
+				(payload, contextSupplier) -> handle(payload, contextSupplier, handler));
+	}
+
+	private static void handle(QuickStackPayload payload, Supplier<NetworkEvent.Context> contextSupplier,
+			BiConsumer<QuickStackPayload, ServerPlayer> handler) {
+		NetworkEvent.Context context = contextSupplier.get();
+		context.enqueueWork(() -> handler.accept(payload, context.getSender()));
+		context.setPacketHandled(true);
 	}
 }

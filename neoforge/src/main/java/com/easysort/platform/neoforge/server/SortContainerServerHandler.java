@@ -6,7 +6,6 @@ import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.neoforge.network.SortContainerPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * Handles the client's "sort this open container" request. Never trusts the
@@ -18,8 +17,7 @@ public final class SortContainerServerHandler {
 	private SortContainerServerHandler() {
 	}
 
-	public static void handle(SortContainerPayload payload, IPayloadContext context) {
-		ServerPlayer player = (ServerPlayer) context.player();
+	public static void handle(SortContainerPayload payload, ServerPlayer player) {
 		AbstractContainerMenu menu = player.containerMenu;
 		if (menu.containerId != payload.containerId()) {
 			return;

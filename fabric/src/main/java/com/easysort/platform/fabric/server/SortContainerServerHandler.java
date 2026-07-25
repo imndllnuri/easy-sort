@@ -19,8 +19,10 @@ public final class SortContainerServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(SortContainerPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(SortContainerPayload.CHANNEL, (server, player, handler, buf, responseSender) -> {
+			SortContainerPayload payload = SortContainerPayload.decode(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(SortContainerPayload payload, ServerPlayer player) {

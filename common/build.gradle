@@ -1,16 +1,22 @@
 plugins {
 	id 'multiloader-common'
-	id 'net.neoforged.moddev'
+	id 'net.neoforged.moddev.legacyforge'
 }
 
-neoForge {
+legacyForge {
 	// No mods{}/runs{} block on purpose - this module never runs as a mod by
-	// itself. NeoForge's own decompiled/joined Minecraft artifact is applied
-	// here purely so common/ has real vanilla classes (AbstractContainerMenu,
-	// ChestMenu, ShulkerBoxMenu, ...) to compile against. Minecraft ships
-	// unobfuscated from 26.1 onward, so there's no mappings config at all -
-	// the classes here already have their real names.
-	neoFormVersion = neo_form_version
+	// itself. "Vanilla mode" (mcpVersion, no forge/neoforge version) is used
+	// purely so common/ has real vanilla classes (AbstractContainerMenu,
+	// ChestMenu, ShulkerBoxMenu, ...) to compile against, without pulling in
+	// any Forge-specific patches. Unlike 26.1+ (see mc/26.1.2 and later),
+	// 1.20.1 ships obfuscated, so real mappings are needed - official Mojang
+	// mappings layered with Parchment, configured below.
+	mcpVersion = neoforge_minecraft_version
+
+	parchment {
+		minecraftVersion = parchment_minecraft_version
+		mappingsVersion = parchment_version
+	}
 }
 
 dependencies {

@@ -38,7 +38,7 @@ public final class EasySortConfigScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		this.minecraft.setScreenAndShow(parent);
+		this.minecraft.setScreen(parent);
 	}
 
 	private Component sortByLabel() {

@@ -1,13 +1,13 @@
 package com.easysort.platform.neoforge.network;
 
 import com.easysort.core.sort.SortKey;
-import com.easysort.platform.neoforge.EasySortNeoForge;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * "Sort my own inventory" - unlike {@link SortContainerPayload}, this never
@@ -15,21 +15,29 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  * touches the requesting player's own inventory regardless of what screen
  * (if any) is open.
  */
-public record SortPlayerInventoryPayload(SortKey primarySortKey) implements CustomPacketPayload {
+public record SortPlayerInventoryPayload(SortKey primarySortKey) {
 
-	public static final Type<SortPlayerInventoryPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "sort_player_inventory"));
-
-	public static final StreamCodec<RegistryFriendlyByteBuf, SortPlayerInventoryPayload> CODEC = StreamCodec.composite(
-			SortKeyCodec.CODEC, SortPlayerInventoryPayload::primarySortKey,
-			SortPlayerInventoryPayload::new);
-
-	public static void register(PayloadRegistrar registrar, IPayloadHandler<SortPlayerInventoryPayload> handler) {
-		registrar.playToServer(TYPE, CODEC, handler);
+	public void send() {
+		NetworkSetup.CHANNEL.sendToServer(this);
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	static void encode(SortPlayerInventoryPayload payload, FriendlyByteBuf buf) {
+		SortKeyCodec.encode(buf, payload.primarySortKey());
+	}
+
+	static SortPlayerInventoryPayload decode(FriendlyByteBuf buf) {
+		return new SortPlayerInventoryPayload(SortKeyCodec.decode(buf));
+	}
+
+	public static void register(SimpleChannel channel, int id, BiConsumer<SortPlayerInventoryPayload, ServerPlayer> handler) {
+		channel.registerMessage(id, SortPlayerInventoryPayload.class, SortPlayerInventoryPayload::encode,
+				SortPlayerInventoryPayload::decode, (payload, contextSupplier) -> handle(payload, contextSupplier, handler));
+	}
+
+	private static void handle(SortPlayerInventoryPayload payload, Supplier<NetworkEvent.Context> contextSupplier,
+			BiConsumer<SortPlayerInventoryPayload, ServerPlayer> handler) {
+		NetworkEvent.Context context = contextSupplier.get();
+		context.enqueueWork(() -> handler.accept(payload, context.getSender()));
+		context.setPacketHandled(true);
 	}
 }

@@ -6,15 +6,13 @@ import com.easysort.platform.neoforge.network.QuickStackPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public final class QuickStackServerHandler {
 
 	private QuickStackServerHandler() {
 	}
 
-	public static void handle(QuickStackPayload payload, IPayloadContext context) {
-		ServerPlayer player = (ServerPlayer) context.player();
+	public static void handle(QuickStackPayload payload, ServerPlayer player) {
 		AbstractContainerMenu menu = player.containerMenu;
 		if (menu.containerId != payload.containerId()) {
 			return;

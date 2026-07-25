@@ -1,31 +1,40 @@
 package com.easysort.platform.neoforge.network;
 
 import com.easysort.core.sort.SortKey;
-import com.easysort.platform.neoforge.EasySortNeoForge;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
 
-public record SortContainerPayload(int containerId, SortKey primarySortKey) implements CustomPacketPayload {
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
-	public static final Type<SortContainerPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "sort_container"));
+public record SortContainerPayload(int containerId, SortKey primarySortKey) {
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, SortContainerPayload> CODEC = StreamCodec.composite(
-			ByteBufCodecs.CONTAINER_ID, SortContainerPayload::containerId,
-			SortKeyCodec.CODEC, SortContainerPayload::primarySortKey,
-			SortContainerPayload::new);
-
-	public static void register(PayloadRegistrar registrar, IPayloadHandler<SortContainerPayload> handler) {
-		registrar.playToServer(TYPE, CODEC, handler);
+	public void send() {
+		NetworkSetup.CHANNEL.sendToServer(this);
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	static void encode(SortContainerPayload payload, FriendlyByteBuf buf) {
+		buf.writeVarInt(payload.containerId());
+		SortKeyCodec.encode(buf, payload.primarySortKey());
+	}
+
+	static SortContainerPayload decode(FriendlyByteBuf buf) {
+		int containerId = buf.readVarInt();
+		SortKey key = SortKeyCodec.decode(buf);
+		return new SortContainerPayload(containerId, key);
+	}
+
+	public static void register(SimpleChannel channel, int id, BiConsumer<SortContainerPayload, ServerPlayer> handler) {
+		channel.registerMessage(id, SortContainerPayload.class, SortContainerPayload::encode, SortContainerPayload::decode,
+				(payload, contextSupplier) -> handle(payload, contextSupplier, handler));
+	}
+
+	private static void handle(SortContainerPayload payload, Supplier<NetworkEvent.Context> contextSupplier,
+			BiConsumer<SortContainerPayload, ServerPlayer> handler) {
+		NetworkEvent.Context context = contextSupplier.get();
+		context.enqueueWork(() -> handler.accept(payload, context.getSender()));
+		context.setPacketHandled(true);
 	}
 }

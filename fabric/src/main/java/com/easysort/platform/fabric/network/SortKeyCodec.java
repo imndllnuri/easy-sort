@@ -1,15 +1,19 @@
 package com.easysort.platform.fabric.network;
 
 import com.easysort.core.sort.SortKey;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
 final class SortKeyCodec {
 
-	static final StreamCodec<ByteBuf, SortKey> CODEC = ByteBufCodecs.VAR_INT.map(SortKeyCodec::byOrdinal, SortKey::ordinal);
-
 	private SortKeyCodec() {
+	}
+
+	static void encode(FriendlyByteBuf buf, SortKey key) {
+		buf.writeVarInt(key.ordinal());
+	}
+
+	static SortKey decode(FriendlyByteBuf buf) {
+		return byOrdinal(buf.readVarInt());
 	}
 
 	private static SortKey byOrdinal(int ordinal) {

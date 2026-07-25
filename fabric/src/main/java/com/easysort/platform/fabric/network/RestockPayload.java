@@ -1,28 +1,19 @@
 package com.easysort.platform.fabric.network;
 
 import com.easysort.platform.fabric.EasySort;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 /** "Top up my partial stacks from this open container." */
-public record RestockPayload(int containerId) implements CustomPacketPayload {
+public record RestockPayload(int containerId) {
 
-	public static final Type<RestockPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "restock"));
+	public static final ResourceLocation CHANNEL = new ResourceLocation(EasySort.MOD_ID, "restock");
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, RestockPayload> CODEC =
-			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, RestockPayload::containerId, RestockPayload::new);
-
-	public static void register() {
-		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
+	public static void encode(RestockPayload payload, FriendlyByteBuf buf) {
+		buf.writeVarInt(payload.containerId());
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	public static RestockPayload decode(FriendlyByteBuf buf) {
+		return new RestockPayload(buf.readVarInt());
 	}
 }

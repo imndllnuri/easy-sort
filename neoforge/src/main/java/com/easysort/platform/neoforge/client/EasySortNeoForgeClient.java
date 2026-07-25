@@ -1,18 +1,15 @@
 package com.easysort.platform.neoforge.client;
 
 import com.easysort.platform.common.MenuContainers;
-import com.easysort.platform.neoforge.EasySortNeoForge;
 import com.easysort.platform.neoforge.client.config.EasySortClientConfig;
 import com.easysort.platform.neoforge.network.SortContainerPayload;
 import com.easysort.platform.neoforge.network.SortPlayerInventoryPayload;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.Identifier;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -22,8 +19,10 @@ import org.lwjgl.glfw.GLFW;
  */
 public final class EasySortNeoForgeClient {
 
-	private static final KeyMapping.Category CATEGORY =
-			new KeyMapping.Category(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "easy_sort"));
+	// 1.20.1 predates KeyMapping.Category (a later addition) - the category
+	// is just a plain translation-key string here, matching vanilla's own
+	// "key.categories.*" convention.
+	private static final String CATEGORY = "key.categories.easysort";
 
 	private static KeyMapping sortInventoryKey;
 	private static KeyMapping sortContainerKey;
@@ -34,7 +33,7 @@ public final class EasySortNeoForgeClient {
 	public static void init(IEventBus modEventBus) {
 		EasySortClientConfig.load();
 		modEventBus.addListener(EasySortNeoForgeClient::registerKeyMappings);
-		NeoForge.EVENT_BUS.addListener(EasySortNeoForgeClient::onScreenKeyPressed);
+		MinecraftForge.EVENT_BUS.addListener(EasySortNeoForgeClient::onScreenKeyPressed);
 	}
 
 	private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
@@ -60,12 +59,11 @@ public final class EasySortNeoForgeClient {
 		if (!(event.getScreen() instanceof AbstractContainerScreen<?> containerScreen)) {
 			return;
 		}
-		if (sortInventoryKey.matches(event.getKeyEvent())) {
-			ClientPacketDistributor.sendToServer(new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey()));
+		if (sortInventoryKey.matches(event.getKeyCode(), event.getScanCode())) {
+			new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey()).send();
 		}
-		if (sortContainerKey.matches(event.getKeyEvent()) && MenuContainers.isSupported(containerScreen.getMenu())) {
-			ClientPacketDistributor.sendToServer(new SortContainerPayload(containerScreen.getMenu().containerId,
-					EasySortClientConfig.getPrimarySortKey()));
+		if (sortContainerKey.matches(event.getKeyCode(), event.getScanCode()) && MenuContainers.isSupported(containerScreen.getMenu())) {
+			new SortContainerPayload(containerScreen.getMenu().containerId, EasySortClientConfig.getPrimarySortKey()).send();
 		}
 	}
 }

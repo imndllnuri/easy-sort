@@ -1,29 +1,37 @@
 package com.easysort.platform.neoforge.network;
 
-import com.easysort.platform.neoforge.EasySortNeoForge;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /** "Top up my partial stacks from this open container." */
-public record RestockPayload(int containerId) implements CustomPacketPayload {
+public record RestockPayload(int containerId) {
 
-	public static final Type<RestockPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySortNeoForge.MOD_ID, "restock"));
-
-	public static final StreamCodec<RegistryFriendlyByteBuf, RestockPayload> CODEC =
-			StreamCodec.composite(ByteBufCodecs.CONTAINER_ID, RestockPayload::containerId, RestockPayload::new);
-
-	public static void register(PayloadRegistrar registrar, IPayloadHandler<RestockPayload> handler) {
-		registrar.playToServer(TYPE, CODEC, handler);
+	public void send() {
+		NetworkSetup.CHANNEL.sendToServer(this);
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	static void encode(RestockPayload payload, FriendlyByteBuf buf) {
+		buf.writeVarInt(payload.containerId());
+	}
+
+	static RestockPayload decode(FriendlyByteBuf buf) {
+		return new RestockPayload(buf.readVarInt());
+	}
+
+	public static void register(SimpleChannel channel, int id, BiConsumer<RestockPayload, ServerPlayer> handler) {
+		channel.registerMessage(id, RestockPayload.class, RestockPayload::encode, RestockPayload::decode,
+				(payload, contextSupplier) -> handle(payload, contextSupplier, handler));
+	}
+
+	private static void handle(RestockPayload payload, Supplier<NetworkEvent.Context> contextSupplier,
+			BiConsumer<RestockPayload, ServerPlayer> handler) {
+		NetworkEvent.Context context = contextSupplier.get();
+		context.enqueueWork(() -> handler.accept(payload, context.getSender()));
+		context.setPacketHandled(true);
 	}
 }

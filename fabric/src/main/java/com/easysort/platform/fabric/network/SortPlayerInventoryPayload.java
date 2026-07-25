@@ -2,11 +2,8 @@ package com.easysort.platform.fabric.network;
 
 import com.easysort.core.sort.SortKey;
 import com.easysort.platform.fabric.EasySort;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * "Sort my own inventory" - unlike {@link SortContainerPayload}, this never
@@ -14,21 +11,15 @@ import net.minecraft.resources.Identifier;
  * touches the requesting player's own inventory regardless of what screen
  * (if any) is open.
  */
-public record SortPlayerInventoryPayload(SortKey primarySortKey) implements CustomPacketPayload {
+public record SortPlayerInventoryPayload(SortKey primarySortKey) {
 
-	public static final Type<SortPlayerInventoryPayload> TYPE =
-			new Type<>(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "sort_player_inventory"));
+	public static final ResourceLocation CHANNEL = new ResourceLocation(EasySort.MOD_ID, "sort_player_inventory");
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, SortPlayerInventoryPayload> CODEC = StreamCodec.composite(
-			SortKeyCodec.CODEC, SortPlayerInventoryPayload::primarySortKey,
-			SortPlayerInventoryPayload::new);
-
-	public static void register() {
-		PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
+	public static void encode(SortPlayerInventoryPayload payload, FriendlyByteBuf buf) {
+		SortKeyCodec.encode(buf, payload.primarySortKey());
 	}
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
+	public static SortPlayerInventoryPayload decode(FriendlyByteBuf buf) {
+		return new SortPlayerInventoryPayload(SortKeyCodec.decode(buf));
 	}
 }

@@ -14,8 +14,10 @@ public final class RestockServerHandler {
 	}
 
 	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(RestockPayload.TYPE, (payload, context) ->
-				context.server().execute(() -> handle(payload, context.player())));
+		ServerPlayNetworking.registerGlobalReceiver(RestockPayload.CHANNEL, (server, player, handler, buf, responseSender) -> {
+			RestockPayload payload = RestockPayload.decode(buf);
+			server.execute(() -> handle(payload, player));
+		});
 	}
 
 	private static void handle(RestockPayload payload, ServerPlayer player) {
