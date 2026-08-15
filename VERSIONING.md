@@ -45,6 +45,12 @@ against a newer Minecraft version than the one in `gradle.properties` -
 it checks the live upstream sources instead of needing a manual re-check
 each time.
 
+Run `scripts/check-version-support.py` to see a table of Fabric/NeoForge
+stable-build status across a whole range of Minecraft versions at once
+(useful for spotting version gaps like NeoForge beta-only releases),
+rather than checking one candidate version like `check-mc-update.py`
+does.
+
 ## Porting to new Minecraft versions
 
 Each Minecraft version bump is its own milestone: update mappings/loader/
