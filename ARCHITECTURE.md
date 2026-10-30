@@ -2,14 +2,17 @@
 
 ## Module & package structure
 
-Multi-module Gradle build (Architectury Loom), so the `core`/`platform`
-boundary is enforced by the build system, not just convention - `common`
-physically cannot depend on Fabric classes, since they're not even on its
-compile classpath.
+Multi-module Gradle build (`net.fabricmc.fabric-loom` for `fabric/`, ModDevGradle
+for `neoforge/` and `common/`; Architectury Loom was used until v1.3.0). The
+loader boundary is enforced by the build system, not just convention - `common`
+physically cannot depend on Fabric or NeoForge classes, since they're not even on
+its compile classpath. The stricter rule inside `common` - `core/` has no
+`net.minecraft.*` imports - is a convention (`common` compiles against vanilla
+Minecraft), kept up by discipline and by unit tests that run without Minecraft.
 
 ```
 easy-sort/
-├── common/                    // Gradle module - zero net.minecraft.*/net.fabricmc.* imports
+├── common/                    // Gradle module - no loader imports; net.minecraft.* only in platform.common
 │   └── com.easysort
 │       ├── core/                // SortEngine, TransferEngine, SortConfig, SortableItem, ...
 │       │   ├── sort/
@@ -90,7 +93,7 @@ on `NeoForge.EVENT_BUS`, plus `RegisterKeyMappingsEvent` for keybinds). Mixins a
 reserved for cases with no clean hook - adding a widget to an existing vanilla
 screen, on both loaders - and live under `platform/fabric/mixin` and
 `platform/neoforge/mixin` respectively for easy audit on each Minecraft version
-port. Mixin itself works identically on both loaders via Architectury Loom; the
+port. Mixin itself works identically on both loaders; the
 two platforms' mixin classes differ only in how they re-check the inventory
 button's per-frame visibility (Fabric: `ScreenEvents.beforeRender`, scoped
 per-screen-instance by Fabric API; NeoForge: a second `@Inject` into

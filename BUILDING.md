@@ -11,7 +11,7 @@
 ```
 
 Output: `fabric/build/libs/easy-sort-<version>.jar` (plus a `-sources.jar`) -
-multi-module Gradle build (Architectury Loom), see [ARCHITECTURE.md](ARCHITECTURE.md).
+multi-module Gradle build (Fabric Loom for Fabric, ModDevGradle for NeoForge), see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Version matrix
 

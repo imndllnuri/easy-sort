@@ -46,7 +46,7 @@ automatically as part of `./gradlew build`.
 
 ## Project layout
 
-The project is a multi-module Gradle build (Architectury Loom): `common/`
+The project is a multi-module Gradle build (Fabric Loom and ModDevGradle): `common/`
 holds loader-agnostic code (`core/`, `platform/common/`), `fabric/` and
 `neoforge/` hold loader-specific code and resources. Bare Gradle task names
 that only one module defines (e.g. `test`, `runGameTest`) work fine from the

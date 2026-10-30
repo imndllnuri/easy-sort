@@ -39,17 +39,18 @@ compatibility table.
   demand clearly justifies it - each one is ongoing maintenance load, not a
   one-time cost.
 
-Run `scripts/check-mc-update.py` any time to check whether the toolchain
-(Fabric API, NeoForge, Parchment, Architectury Loom) supports building
-against a newer Minecraft version than the one in `gradle.properties` -
-it checks the live upstream sources instead of needing a manual re-check
-each time.
+Run `scripts/check-mc-update.py` any time to check, for Fabric and NeoForge
+separately, whether a newer Minecraft version than the one in `gradle.properties`
+(`fabric_minecraft_version` / `neoforge_minecraft_version`) is ready to build
+against: Fabric API must have a build for it, and NeoForge must have a stable
+(non-beta) build. It checks the live upstream sources instead of needing a
+manual re-check each time.
 
 Run `scripts/check-version-support.py` to see a table of Fabric/NeoForge
 stable-build status across a whole range of Minecraft versions at once
 (useful for spotting version gaps like NeoForge beta-only releases),
-rather than checking one candidate version like `check-mc-update.py`
-does.
+rather than checking only the candidates after the current version like
+`check-mc-update.py` does.
 
 ## Porting to new Minecraft versions
 
