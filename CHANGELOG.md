@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Ported both loaders to Minecraft 26.3 (Fabric API `0.165.0+26.3`, NeoForge
+  `26.3.0.99`), so Fabric and NeoForge target the same Minecraft version again.
+  Compiles and passes the unit tests (28 in `common/`); **not yet tested in the
+  game**. Minecraft 26.3 replaced GLFW with SDL, so the default key bindings now
+  use `InputConstants.KEY_R` / `InputConstants.UNKNOWN` instead of the GLFW
+  constants. NeoForge also picks up the `Minecraft.setScreen` ->
+  `setScreenAndShow` rename that Fabric already had since 1.4.0.
+- Build tooling: Gradle 9.8.2 (Fabric Loom 1.19 needs 9.8 or newer), Fabric Loom
+  1.19.3, ModDevGradle 2.0.148, Fabric Loader 0.20.1.
+
 ## [1.4.1] - 2026-07-20
 
 ### Changed

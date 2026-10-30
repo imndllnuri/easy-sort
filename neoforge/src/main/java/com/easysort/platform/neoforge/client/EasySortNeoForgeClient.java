@@ -5,6 +5,7 @@ import com.easysort.platform.neoforge.EasySortNeoForge;
 import com.easysort.platform.neoforge.client.config.EasySortClientConfig;
 import com.easysort.platform.neoforge.network.SortContainerPayload;
 import com.easysort.platform.neoforge.network.SortPlayerInventoryPayload;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.Identifier;
@@ -13,7 +14,6 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.NeoForge;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Client-only setup. Only ever touched from a Dist.CLIENT-gated branch in
@@ -38,12 +38,12 @@ public final class EasySortNeoForgeClient {
 	}
 
 	private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-		sortInventoryKey = new KeyMapping("key.easy-sort.sort_inventory", GLFW.GLFW_KEY_R, CATEGORY);
+		sortInventoryKey = new KeyMapping("key.easy-sort.sort_inventory", InputConstants.KEY_R, CATEGORY);
 		event.register(sortInventoryKey);
 
 		// Unbound by default - "S" is movement, and there's no other obviously
 		// safe default key for "sort the container I'm looking at".
-		sortContainerKey = new KeyMapping("key.easy-sort.sort_container", GLFW.GLFW_KEY_UNKNOWN, CATEGORY);
+		sortContainerKey = new KeyMapping("key.easy-sort.sort_container", InputConstants.UNKNOWN.getValue(), CATEGORY);
 		event.register(sortContainerKey);
 	}
 

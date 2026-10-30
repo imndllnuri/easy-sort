@@ -5,6 +5,7 @@ import com.easysort.platform.fabric.EasySort;
 import com.easysort.platform.fabric.client.config.EasySortClientConfig;
 import com.easysort.platform.fabric.network.SortContainerPayload;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -13,7 +14,6 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 public final class EasySortClient implements ClientModInitializer {
 
@@ -21,12 +21,12 @@ public final class EasySortClient implements ClientModInitializer {
 			KeyMapping.Category.register(Identifier.fromNamespaceAndPath(EasySort.MOD_ID, "easy_sort"));
 
 	private static final KeyMapping SORT_INVENTORY_KEY = KeyMappingHelper.registerKeyMapping(
-			new KeyMapping("key.easy-sort.sort_inventory", GLFW.GLFW_KEY_R, CATEGORY));
+			new KeyMapping("key.easy-sort.sort_inventory", InputConstants.KEY_R, CATEGORY));
 
 	// Unbound by default - "S" is movement, and there's no other obviously
 	// safe default key for "sort the container I'm looking at".
 	private static final KeyMapping SORT_CONTAINER_KEY = KeyMappingHelper.registerKeyMapping(
-			new KeyMapping("key.easy-sort.sort_container", GLFW.GLFW_KEY_UNKNOWN, CATEGORY));
+			new KeyMapping("key.easy-sort.sort_container", InputConstants.UNKNOWN.getValue(), CATEGORY));
 
 	@Override
 	public void onInitializeClient() {
