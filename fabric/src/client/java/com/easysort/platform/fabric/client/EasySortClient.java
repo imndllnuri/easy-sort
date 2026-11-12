@@ -11,6 +11,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -46,6 +49,14 @@ public final class EasySortClient implements ClientModInitializer {
 				return;
 			}
 			ScreenKeyboardEvents.afterKeyPress(screen).register((s, keyEvent) -> {
+				// Fabric's afterKeyPress fires even when the screen already used the
+				// key (NeoForge's ScreenEvent.KeyPressed.Post does not). Without this,
+				// typing "r" in the anvil rename box or the creative search box would
+				// also sort the inventory. Does not cover the recipe book's search
+				// box: vanilla keeps it private and always reports it as unfocused.
+				if (isTypingInTextBox(s)) {
+					return;
+				}
 				if (SORT_INVENTORY_KEY.matches(keyEvent)) {
 					ClientPlayNetworking.send(new SortPlayerInventoryPayload(EasySortClientConfig.getPrimarySortKey()));
 				}
@@ -55,5 +66,10 @@ public final class EasySortClient implements ClientModInitializer {
 				}
 			});
 		});
+	}
+
+	private static boolean isTypingInTextBox(Screen screen) {
+		ComponentPath focusPath = screen.getCurrentFocusPath();
+		return focusPath != null && focusPath.component() instanceof EditBox box && box.canConsumeInput();
 	}
 }
