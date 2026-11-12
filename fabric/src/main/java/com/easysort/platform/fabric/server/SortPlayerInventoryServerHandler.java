@@ -2,6 +2,7 @@ package com.easysort.platform.fabric.server;
 
 import com.easysort.core.config.SortConfig;
 import com.easysort.platform.common.ContainerAdapter;
+import com.easysort.platform.common.MenuContainers;
 import com.easysort.platform.fabric.network.SortPlayerInventoryPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,6 +19,9 @@ public final class SortPlayerInventoryServerHandler {
 	}
 
 	private static void handle(SortPlayerInventoryPayload payload, ServerPlayer player) {
+		if (!MenuContainers.canPlayerInteract(player)) {
+			return;
+		}
 		// Sorts only the 27 main storage slots - never the hotbar (reordering
 		// it mid-use would be jarring/dangerous, e.g. moving your held tool)
 		// and never armor/offhand, which sit past index INVENTORY_SIZE.

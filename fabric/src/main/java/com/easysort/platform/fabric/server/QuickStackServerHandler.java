@@ -19,6 +19,9 @@ public final class QuickStackServerHandler {
 	}
 
 	private static void handle(QuickStackPayload payload, ServerPlayer player) {
+		if (!MenuContainers.canPlayerInteract(player)) {
+			return;
+		}
 		AbstractContainerMenu menu = player.containerMenu;
 		if (menu.containerId != payload.containerId()) {
 			return;
