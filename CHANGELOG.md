@@ -21,9 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   while an editable text box has focus.
 - Building from a fresh checkout failed with "Toolchain download
   repositories have not been configured" on any machine without a JDK 21
-  installed. `build-logic` (an included build) pinned Java 21 and had no
-  toolchain resolver of its own; it now targets Java 25 like the rest of the
-  project and resolves it the same way.
+  installed. `build-logic` (an included build) needs Java 21 but had no
+  toolchain resolver of its own, unlike the root build. It now has the same
+  foojay resolver, so Gradle downloads the JDK 21 it needs automatically.
 
 ### Known issues
 
