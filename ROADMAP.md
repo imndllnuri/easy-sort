@@ -3,8 +3,8 @@
 ## MVP (targeting v1.0)
 
 - [x] Player inventory sorting (hotkey + in-screen button, "I", available on
-      any container screen - only touches the main 36 hotbar+storage slots,
-      never equipped armor/offhand)
+      any container screen - only touches the 27 main storage slots, never the
+      hotbar or equipped armor/offhand)
 - [x] Chest sorting, including double chests (button only - also works on
       barrels and ender chests for free, since they share vanilla's `ChestMenu`)
 - [x] Configurable hotkeys - "Sort Inventory" (default `R`) and "Sort

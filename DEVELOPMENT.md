@@ -63,6 +63,6 @@ under `common/`.
 
 ## Version matrix
 
-Minecraft, mappings, loader, and Fabric API versions are all defined in
+Minecraft, loader, Fabric API and NeoForge versions are all defined in
 `gradle.properties` — check https://fabricmc.net/develop/ before bumping any
 of them.
