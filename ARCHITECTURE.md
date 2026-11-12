@@ -69,11 +69,14 @@ class of desync/dupe bugs this design avoids.
 
 ## Config management
 
-- `core/config`: plain data classes — sort order, per-feature toggles.
-- `platform/fabric` config binding: a config-screen library generates the in-game
-  UI from the data class and handles persistence. UI-framework annotations stay out
-  of `core/config` (or are confined to a thin adapter) so the data model stays
-  loader-agnostic.
+- `core/config`: plain data classes - `SortConfig` (an ordered list of `SortKey`s).
+- Each platform has a small `EasySortClientConfig` that reads/writes the player's
+  one preference (the primary sort key) as JSON with Gson, in `config/easy-sort.json`
+  (with a `configVersion` field for future migrations), and a plain vanilla `Screen`
+  with one cycle button. No config-screen library is used. The key is sent with
+  each sort request, so it follows the player across servers. These client classes
+  are near-identical on both loaders (see the duplication note under Module & package
+  structure).
 
 ## Networking
 
@@ -95,11 +98,12 @@ screen, on both loaders - and live under `platform/fabric/mixin` and
 `platform/neoforge/mixin` respectively for easy audit on each Minecraft version
 port. Mixin itself works identically on both loaders; the
 two platforms' mixin classes differ only in how they re-check the inventory
-button's per-frame visibility (Fabric: `ScreenEvents.beforeRender`, scoped
+button's per-frame visibility (Fabric: `ScreenEvents.beforeExtract`, scoped
 per-screen-instance by Fabric API; NeoForge: a second `@Inject` into
-`AbstractContainerScreen.render()` HEAD, since `AbstractWidget.render()` is
-`final` and NeoForge's screen render event is a global bus listener that would
-otherwise leak one registration per screen opened).
+`AbstractContainerScreen.extractRenderState()` HEAD, since
+`AbstractWidget.extractRenderState()` is `final` and NeoForge's screen render
+event is a global bus listener that would otherwise leak one registration per
+screen opened).
 
 ## Testing
 

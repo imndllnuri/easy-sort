@@ -15,7 +15,7 @@ multi-module Gradle build (Fabric Loom for Fabric, ModDevGradle for NeoForge), s
 
 ## Version matrix
 
-Minecraft, mappings, Fabric Loader, and Fabric API versions are all defined in
+Minecraft, Fabric Loader, Fabric API and NeoForge versions are all defined in
 `gradle.properties` — this is the single place to bump when porting to a new
 Minecraft version. See [VERSIONING.md](VERSIONING.md) for the porting process.
 

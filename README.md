@@ -11,14 +11,18 @@ partial stacks — no inventory-management suite bloat, no forced GUI overhaul.
 - **Sort** ("S") any chest-type container — chest, double chest, barrel,
   trapped chest, ender chest, minecart with chest, and shulker box
 - **Sort your inventory** ("I", on any container screen, plus a rebindable
-  hotkey) — only ever touches your 36 hotbar+storage slots, never equipped
-  armor or your offhand item
+  hotkey) — only ever touches your 27 main storage slots, never your hotbar,
+  equipped armor or your offhand item
 - **Quick Stack** ("Q") — moves everything in your inventory that the open
   container already has into it
 - **Restock** ("R") — tops up your existing partial stacks from the open
   container, without handing you item types you weren't already carrying
 - **Settings** ("G") — choose your sort order (mod / item ID / count / name);
   persisted per-player, follows you across servers
+
+The letters in quotes are the labels of the small on-screen buttons. The
+hotkeys are separate and rebindable under Controls > Key Binds > Easy Sort:
+"Sort Inventory" (default `R`) and "Sort Container" (unbound by default).
 
 ## Status
 
@@ -49,7 +53,7 @@ for the other to catch up.
 | Minecraft | Loader | Status |
 |---|---|---|
 | 26.2 | Fabric | Release |
-| 26.2 | NeoForge | Not yet - NeoForge has no stable (non-beta) build for 26.2 |
+| 26.2 | NeoForge | Not yet - a stable NeoForge build for 26.2 exists now, the port is pending |
 | 26.1.2 | NeoForge | Release |
 | 26.1, 26.1.1, 26.1.2 | Fabric | Frozen on [`mc/26.1.x-fabric`](https://github.com/imndllnuri/easy-sort/tree/mc/26.1.x-fabric) (last release: `v1.3.1`) |
 | 1.21.11 | Fabric | Frozen on [`mc/1.21.11`](https://github.com/imndllnuri/easy-sort/tree/mc/1.21.11) (last release: `v1.2.0`) |

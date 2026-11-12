@@ -26,8 +26,19 @@ jobs:
       - name: Build
         run: ./gradlew build --no-daemon
 
-      - name: Upload build artifacts
+      # Each loader module builds its own jar under <module>/build/libs/ (there
+      # is no root-level build/libs), and both jars share the same file name -
+      # so they go up as two separately named artifacts.
+      - name: Upload Fabric build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: easy-sort
-          path: build/libs/*.jar
+          name: easy-sort-fabric
+          path: fabric/build/libs/*.jar
+          if-no-files-found: error
+
+      - name: Upload NeoForge build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: easy-sort-neoforge
+          path: neoforge/build/libs/*.jar
+          if-no-files-found: error

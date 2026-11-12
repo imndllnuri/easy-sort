@@ -14,7 +14,7 @@ independent of the Minecraft version it targets.
 
 The mod version is **not** the same as:
 
-- **Minecraft version** (`1.21.10`) — the game version the build targets.
+- **Minecraft version** (`26.2`) — the game version the build targets.
 - **Fabric Loader version** — the mod loader version required at runtime.
 - **Fabric API version** — a separate mod dependency, versioned independently.
 
@@ -54,8 +54,9 @@ rather than checking only the candidates after the current version like
 
 ## Porting to new Minecraft versions
 
-Each Minecraft version bump is its own milestone: update mappings/loader/
-Fabric API/NeoForge versions in `gradle.properties`, run the full test suite
+Each Minecraft version bump is its own milestone: update the loader,
+Fabric API and NeoForge versions in `gradle.properties` (there are no
+mappings to update: Minecraft ships unobfuscated from 26.1 on), run the full test suite
 (unit tests in `common/core` should pass unchanged, by design — see
 [ARCHITECTURE.md](ARCHITECTURE.md)), then manually re-verify both
 `platform/fabric` and `platform/neoforge`'s mixins and hooks, which are what
