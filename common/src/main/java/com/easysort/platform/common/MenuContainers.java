@@ -1,6 +1,7 @@
 package com.easysort.platform.common;
 
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
@@ -25,5 +26,18 @@ public final class MenuContainers {
 
 	public static Container extractContainer(AbstractContainerMenu menu) {
 		return menu.slots.get(0).container;
+	}
+
+	/**
+	 * Whether this player may change inventories through Easy Sort's requests.
+	 * Vanilla's container-click handling (ServerGamePacketListenerImpl) ignores
+	 * every slot click from a spectator, who is allowed to open a chest to look
+	 * inside but not to touch it. Sort/Quick Stack/Restock move items just like
+	 * those clicks do, so they must follow the same rule - otherwise a spectator
+	 * could take items from a chest with Restock. Every server handler calls this
+	 * first.
+	 */
+	public static boolean canPlayerInteract(Player player) {
+		return !player.isSpectator();
 	}
 }

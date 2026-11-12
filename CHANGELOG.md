@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Both platforms:** spectators can no longer use Sort, Quick Stack or
+  Restock. Vanilla ignores every container click from a spectator (they may
+  open a chest to look, not touch), but Easy Sort's server handlers had no
+  such check - a spectator could take items out of a chest with Restock.
+  Now all four handlers refuse requests from spectators.
+- **Fabric:** typing "r" in the anvil rename box or the creative search box
+  also triggered "Sort Inventory" (default key `R`). Fabric's
+  `afterKeyPress` fires even when the screen already used the key; NeoForge's
+  event does not, so NeoForge was never affected. The hotkeys are now ignored
+  while an editable text box has focus.
+- Building from a fresh checkout failed with "Toolchain download
+  repositories have not been configured" on any machine without a JDK 21
+  installed. `build-logic` (an included build) needs Java 21 but had no
+  toolchain resolver of its own, unlike the root build. It now has the same
+  foojay resolver, so Gradle downloads the JDK 21 it needs automatically.
+
+### Known issues
+
+- **Fabric:** typing "r" into the recipe book's search box (crafting table,
+  inventory) still triggers "Sort Inventory". Vanilla keeps that box private
+  and always reports it as unfocused, so it cannot be detected without a new
+  mixin. Rebinding "Sort Inventory" avoids it.
+
+### Changed
+
+- `BUILDING.md` / `DEVELOPMENT.md` now say a full JDK 25 is required (not
+  JDK 21, and not a JRE-only install - NeoForge's build tooling needs the
+  Java compiler).
+
 ## [1.4.1] - 2026-07-20
 
 ### Changed

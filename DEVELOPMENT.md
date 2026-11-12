@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- JDK 21
+- A full JDK 25 (not JRE-only) - see [BUILDING.md](BUILDING.md) for details
 - No local Gradle install needed — use the bundled wrapper (`./gradlew`)
 
 ## Building

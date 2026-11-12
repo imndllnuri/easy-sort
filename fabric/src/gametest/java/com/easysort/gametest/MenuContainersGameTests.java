@@ -46,4 +46,16 @@ public class MenuContainersGameTests {
 
 		helper.succeed();
 	}
+
+	@GameTest
+	public void onlySpectatorsAreBlockedFromInteracting(GameTestHelper helper) {
+		helper.assertTrue(!MenuContainers.canPlayerInteract(helper.makeMockPlayer(GameType.SPECTATOR)),
+				Component.literal("a spectator must not be allowed to sort/quick-stack/restock"));
+		for (GameType allowed : new GameType[] {GameType.SURVIVAL, GameType.CREATIVE, GameType.ADVENTURE}) {
+			helper.assertTrue(MenuContainers.canPlayerInteract(helper.makeMockPlayer(allowed)),
+					Component.literal(allowed + " players must still be allowed to interact"));
+		}
+
+		helper.succeed();
+	}
 }

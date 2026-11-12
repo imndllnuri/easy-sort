@@ -24,6 +24,9 @@ public final class SortContainerServerHandler {
 	}
 
 	private static void handle(SortContainerPayload payload, ServerPlayer player) {
+		if (!MenuContainers.canPlayerInteract(player)) {
+			return;
+		}
 		AbstractContainerMenu menu = player.containerMenu;
 		if (menu.containerId != payload.containerId()) {
 			return;

@@ -2,7 +2,16 @@
 
 ## Requirements
 
-- JDK 21 (no local Gradle install needed — use `./gradlew`)
+- A full JDK 25 - not a JRE-only install (no local Gradle install needed —
+  use `./gradlew`). Minecraft 26.x requires Java 25, and NeoForge's build
+  tooling needs the Java compiler, which a JRE does not include.
+  - If Gradle fails with `release version 25 not supported`, your `java` is
+    JRE-only (e.g. Ubuntu's `openjdk-25-jre-headless`). Install the JDK
+    package, or point `JAVA_HOME` at a full JDK 25.
+  - If you only have a different JDK, Gradle downloads the ones it needs
+    itself (foojay toolchain resolver): JDK 25 for the mod and JDK 21 for the
+    build scripts in `build-logic/`. This needs network access once. Gradle
+    itself can run on JDK 21 or newer.
 
 ## Build a distributable jar
 
