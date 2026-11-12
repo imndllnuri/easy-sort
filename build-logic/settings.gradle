@@ -1,0 +1,11 @@
+// build-logic is an included build, so it does NOT inherit the root
+// settings.gradle's plugins{} block. Without its own toolchain resolver,
+// Gradle can only use a JDK that is already installed here - and fails with
+// "Toolchain download repositories have not been configured" when the
+// requested one is missing. Same resolver as the root build, so build-logic
+// and the mod itself provision their JDK the same way.
+plugins {
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'build-logic'
